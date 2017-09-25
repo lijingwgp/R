@@ -1,1 +1,43 @@
+# lapply and sapply
+# these functions will split up some data into smaller pieces, apply a function
+# to each piece, then combine the results
+
+head(flags)                         # a short summary of the data
+dim(flags)                          # the dimension of the data
+class(flags)                        # the entire dataset is stored as a data.frame which did not say each of the variable
+
+
+cls_list <- lapply(flags, class)    # apply the class() function to each column of the flags dataset and store in cls_list
+class(cls_list)                     # l in lapply stands for list. the lapply function taks a list as input, applies a function
+                                    # to each element of the list, then returns a list of the same length
+
+
+as.character(cls_list)              # since every element of the list returned by lapply is a character vector of length one
+                                    # (i.e. "integer" and "vector"), cls_list can be simplified to a character vector
+
+
+cls_vect <- sapply(flags, class)    # sapply allows to automate the same process behind the scenes, but then attempting 
+class(cls_vect)                     # to simplify the result for you. if sapply can't figure things out, then it just 
+                                    # returns a list, no different from what lapply would give you
+
+
+sum(flags$orange)                   # the total number of countries with the color orange on their flag
+flag_colors <- flags[,11:17]        # store the columns containing the color data in a new data frame
+lapply(flag_colors, sum)            # repeat addition for each of the colors recorded in the dataset
+sapply(flag_colors,sum)             # the result is a list, since lapply always returns a list. each element of this list is length one
+                                    # so the result can be simplified to a vector by calling sapply
+sapply(flag_colors,mean)            # to calculate the proportion of flags containing each color
+
+
+flag_shapes <- flags[, 19:23]       # extract columns 19 through 23 and store into a new data frame
+lapply(flag_shapes, range)          # range returns the minimum and maximum of its first argument                                    
+shape_mat<-sapply(flag_shapes,range)# do the same with function sapply
+class(shape_mat)                    # returns a matrix
+
+
+unique(c(3,4,5,5,5,6,6))            # unique function removes all the duplicate elements
+unique_vals<-lapply(flags,unique)   # to know the unique values for each variable in the flags dataset
+unique_vals                         # returns a list
+sapply(unique_vals,length)          # determine the length of each element of unique_vals
+sapply(flags,unique)                # if use sapply directly, it will return the same result as lapply since all vectors have different length
 
