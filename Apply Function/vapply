@@ -1,0 +1,22 @@
+# what if you had forgotten how unique() works and mistakenly thought it returns the number of unique values contained in 
+# the object passed to it? then you might have incorrectly expected sapply(flags,unique) to return a numeric nector.
+# this is a problem especially when working non-interactively, a misunderstanding may go undetected and cause incorrect results latter on
+# and that's where vapply is useful
+
+# whereas sapply() tries to 'guesss' the correct format of the result, vapply() allows you to specify it explicityly.
+# if the result doesn't match the format you specify, vapply will throw an error.
+
+vapply(flags, unique, numeric(1))           # this says you expect each element of the result to be a numeric vector of length 1
+sapply(flags, class)                        # return a character vector containing the class of each column in the dataset
+vapply(flags, class, character(1))          # expect the class function to return a character vector of length 1 
+                                            # since our expectation was correct, the vapply result is identical to the sapply result
+
+
+# tapply allows you to split your data up into groups bassed on the value of some variable, 
+# then apply a function to the member of each group
+
+table(flags$landmass)                       # landmass represents a different part of the world which numbered from 1 to 6
+table(flags$animate)                        # determine if a country's flag contains an animate image
+tapply(flags$animate,flags$landmass,mean)   # apply the mean function to the animate variable separately for each of the six landmass groups
+tapply(flags$population,flags$red,summary)  # summary of population for countries with and without color red on their flag
+tapply(flags$population,flags$landmass,summary) 
