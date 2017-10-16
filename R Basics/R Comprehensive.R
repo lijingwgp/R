@@ -141,7 +141,7 @@ mytable1["Down", "Down"] / sum(mytable1[, "Down"])
 #### Precision
 mytable1["Up", "Up"] / sum(mytable1[, "Up"])
 #######################
-# Comparing models   ##            
+### Comparing models ##            
 #######################
 mytable2 <- table(actuals[,1], predicted[,2])
 mytable3 <- table(actuals[,1], predicted[,3])
@@ -153,7 +153,7 @@ mytable3 <- table(actuals[,1], predicted[,3])
 (mytable3["Up", "Down"] + mytable3["Down", "Up"]) / sum(mytable3)
 # Which model is better (trick question!)
 ###########################################################################################
-#Partitioning a dataframe into train, validate, test sets of specified relative sizes #####
+## Partitioning a dataframe into train, validate, test sets of specified relative sizes ###
 ###########################################################################################
 set.seed(5072)             #sets the random seed
 nobs <- nrow(SandP) 
