@@ -1,0 +1,321 @@
+---
+title: "HW2 Optimization"
+author: "Jing Li"
+date: "October 21, 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## 2.1 Matrix Representation
+
+Using R, we can generate a random n×n adjacency matrix as follows. In the example below, each edge has a 20% chance of occuring. 
+
+```{r}
+n <- 50
+d <- runif(n*n)
+d[d < 0.8] <- NA
+d <- matrix(d, nrow = n, ncol = n)
+diag(d) <- NA
+d[upper.tri(d)] = t(d)[upper.tri(d)]
+```
+
+
+## 2.2 Adjacency Matrix to Adjacency List
+
+Write a function to convert adjacency matrix to an adjcency list called ds
+
+```{r}
+AdjMatrix2List <- function(d){
+  ds <- matrix(ncol = 3,dimnames = list(NULL,c("head","tail","weight")))
+  for (i in 1:nrow(d)){
+    for (j in 1:nrow(d)){
+      if(!is.na(d[i,j])){
+        ds <- rbind(ds,c(i,j,d[i,j]))
+      }
+    }
+  }
+  ds <- ds[-1,]
+  return(ds)
+}
+head(AdjMatrix2List(d),50)
+```
+
+
+## 3 Euclidean Minimum Spanning Tree
+
+Create a euclidean minimum tree on a set of random (x,y) coordinates. We want to
+build and visualize a network that connects all of the coordinates at minimum 
+cost we can generate a random set of 50 coordinates 
+
+```{r}
+n <- 50
+x <- round(runif(n)*1000)
+y <- round(runif(n)*1000)
+plot(x,y,pch=16)
+```
+
+
+## 3.1 Adjacency Matrix 
+
+Create an adjacency matrix d by calculating the euclidean distance between every 
+pair of points
+
+```{r}
+eudist <- function(x,y){
+  distance <- c()
+  for (i in 1:n){
+    for(j in 1:n){
+      distance <- c(distance, sqrt((x[j]-x[i])^2+(y[j]-y[i])^2))
+    }
+  }
+  distance <- matrix(distance, nrow = n, ncol = n)
+  return(distance)
+}
+
+d <- eudist(x,y)
+head(d,10)
+```
+
+
+## 3.2 Adjacency List
+
+Create an adjacency list from the distance adjacency matrix
+
+```{r}
+ds <- AdjMatrix2List(d)
+head(ds,50)
+```
+
+
+## 3.3 Calculate the Minimum Spanning Tree using Kruskal or Prim
+
+```{r}
+require(optrees)
+ds.mst <- msTreePrim(1:n, ds)
+str(ds.mst)
+```
+
+
+## 3.4 Produce a Plot Visulizing the Minimum Spanning Tree
+
+Using the segments function, draw straight line segments on the plot (x,y)
+corresponding to the edge in the minimum spanning tree. ept1 is the source code
+and ept2 is the destination node. ignore the weights
+
+```{r}
+plot(x,y)
+xstart <- c()
+ystart <- c()
+xend <- c()
+yend <- c()
+
+plot.mst <- function(ds.mst){
+  for(i in 1:nrow(ds.mst$tree.arcs)){
+    xstart[i] <- x[ds.mst$tree.arcs[i,][1]]
+    ystart[i] <- y[ds.mst$tree.arcs[i,][1]]
+    xend[i] <- x[ds.mst$tree.arcs[i,][2]]
+    yend[i] <- y[ds.mst$tree.arcs[i,][2]]
+  }
+  return(segments(xstart,ystart,xend,yend))
+}
+plot.mst(ds.mst)
+```
+
+
+## 4 Hostile Agents
+
+An intelligence service has n agents in a non-friendly country. Each agent knows 
+some of the other agents and has in place procedures for arranging a rendezvous 
+with anyone he or she knows. For each such possible rendezvous, say between 
+agents i and j, any message passed between these agents will fall into hostile 
+hands with a certain probability pij. The government wants to transmit a 
+confidential message among all the agents while maximizing the total probability 
+that no message is intercepted
+
+
+## 4.1 Specify This Problem As a Graph Optimization Problem
+
+There are n nodes in a graph. Each nodes has some edges connecting to other 
+nodes. The weight for each edges is a random number between 0 and 1. The task is 
+to specify a starting node then construct a minimum spanning tree that connect 
+all nodes at a minimum cost (overall probability of the intelligence being 
+captured by enemy is minimized) 
+
+
+## 4.2 Structure Inputs to This Problem
+
+We need to initialize a partition structure which has two sets, "key" and "pred"
+For each vertex v from V, set key[v] = infinity and set pred[v] = -1. We also
+want to specify key[0] = 0 which indicates our starting node. We then write a 
+priority queue PQ. 
+
+The essential "inputs" in this algorithm are E which represents vectors 
+containing all edges and V which represents vectors containing all vertex.
+
+
+## 4.3 Which Algorithm to Use
+
+The Kruskal algorithm is preferred. Although, both the Prim algorithm and the 
+Kruskal algorithm will construct a minimum spanning tree; and, both algorithms 
+will capture the same of amount of information about the edges (in our case are 
+the individual probabilities that enemy will capture the intelligence) 
+However since we are dealing with probabilities, we would want to multiply 
+probabilities along each edge in order to deliver the intelligence from a 
+starting node to a ending node. 
+
+Think this as partitioning sets. There are more intermediate parent nodes 
+between a root node and a individual node in a minimum spanning tree that is 
+produced by the Kruskal algorithm than one produced by the Prim algorithm. 
+
+
+## 4.4 What is Computational Efficiency 
+
+The running time for Dijkstra's algorithm is O(E lg E)
+
+
+## 5 Project Scheduling
+
+Consider a task A which must be completed before some task B. We can represent 
+all such tasks in a directed acyclic graph (DAG), such that if A happens before 
+B, we include a directed edge from A to B. 
+
+
+## 5.1 Matrix Representation
+
+Represent this scheduling network in R. Associate a completion time with each 
+node.
+
+```{r}
+adj_matrix1 <- matrix(NA,nrow = 10,ncol = 10,dimnames = list(c('A','B','C','D','E','F','G','H','I','J'),c('A','B','C','D','E','F','G',
+                                                                                                          'H','I','J')))
+adj_matrix1[1,2] <- 90
+adj_matrix1[1,6] <- 90
+adj_matrix1[1,9] <- 90
+adj_matrix1[2,3] <- 15
+adj_matrix1[3,7] <- 5
+adj_matrix1[4,5] <- 20
+adj_matrix1[4,8] <- 20
+adj_matrix1[4,10] <- 20
+adj_matrix1[6,7] <- 25
+adj_matrix1[7,4] <- 14
+adj_matrix1[9,10] <- 30
+adj_matrix1
+```
+
+
+## 5.2 Enter, the Management
+
+1. The earliest completion date for the project if it commences on Nov 1, 2017. 
+2. The earliest and latest start times for each task which will not alter the 
+   completion date. 
+3. The earliest and latest ﬁnish times for each activity that will not alter the            completion date. 
+4. The list of tasks which must adhere to a rigid schedule so as not to delay 
+   the overall project, as well as a list of those tasks which have more 
+   ﬂexibility. 
+
+
+## 5.4 Earliest Start Times (ES)
+
+To calculate the earliest start times for each node, you will need to solve the 
+longest path problem, starting at source node A, with negative edge weights. The distances output from the algorithm are your earliest start times. 
+
+```{r}
+require(optrees)
+adj_matrix1 <- adj_matrix1 * -1
+adj_list1 <- AdjMatrix2List(adj_matrix1)
+ES <- spTreeBellmanFord(1:10, adj_list1,source.node = 1, directed = T)$distances*-1
+ES
+```
+
+
+## 5.6 Earliest Finish Times
+
+EF = ES + node duration
+
+```{r}
+s.nodes <- c(90,15,5,20,21,25,14,28,30,45)
+EF <- ES + s.nodes
+EF
+```
+
+
+## 5.7 Latest Finish Time
+
+The latest ﬁnish times are computed on the transpose of the graph. That is, for 
+each edge from A to B, we reverse its direction and instead have an edge from B 
+to A. we will have to rebuild your edge weights. We are still looking for ﬁnish 
+times along the (longest) critical path, so again, we ﬂip the edge weights to 
+negative, and solve the shortest path problem.
+
+We can add an 11th node — a dummy node with duration 0 which has outgoing edges 
+to E, H, and J.
+
+```{r}
+require(optrees)
+adj_matrix2 <- matrix(NA,nrow = 11,ncol = 11,dimnames = list(c('A','B','C','D','E','F','G','H','I','J',"K"),c('A','B','C','D','E','F',
+                                                                                                              'G','H','I','J',"K")))
+
+adj_matrix2[2,1] <- 15
+adj_matrix2[6,1] <- 25
+adj_matrix2[9,1] <- 30
+adj_matrix2[3,2] <- 5
+adj_matrix2[7,3] <- 14
+adj_matrix2[5,4] <- 21
+adj_matrix2[8,4] <- 28
+adj_matrix2[10,4] <- 45
+adj_matrix2[7,6] <- 14
+adj_matrix2[4,7] <- 20
+adj_matrix2[10,9] <- 45
+adj_matrix2[11,8] <- 0
+adj_matrix2[11,5] <- 0
+adj_matrix2[11,10] <- 0
+adj_matrix2
+
+adj_matrix2 <- adj_matrix2 * -1
+adj_list2 <- AdjMatrix2List(adj_matrix2)
+LF <- spTreeBellmanFord(1:11, adj_list2,source.node = 11, directed = T)$
+  distances * -1
+LF <- EF[length(EF)]-LF[-length(LF)]
+LF
+```
+
+
+## 5.8 Latest Start Times
+
+LS = LF - node duration
+
+```{r}
+LS <- LF - s.nodes
+LS
+```
+
+
+## 5.9 Slack
+
+Once we have computed the above quantities, the slack along the critical path is
+either LF − EF or LS − ES. 
+
+1. Which tasks have scheduling ﬂexibility? (positive slack) 
+2. Which tasks are on the critical path? (slack=0)
+
+```{r}
+s.labels <- c('A','B','C','D','E','F','G','H','I','J')
+Critical_Path <- c()
+Flexibility <- c()
+for(i in 1:10){
+  if((LF[i] - EF[i]) == 0)
+    Critical_Path[i] <- s.labels[i]
+  else
+    Flexibility[i] <- s.labels[i]
+}
+Flexibility[10] <- NA
+final_table <- data.frame(Critical_Path,Flexibility,ES,EF,LS,LF,row.names = 
+                            s.labels)
+final_table 
+```
