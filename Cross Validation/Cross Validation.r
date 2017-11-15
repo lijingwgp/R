@@ -17,6 +17,5 @@ print("The lowest estimated test MSE occured when predictor variable has one deg
 glm_fit <- glm(Accepted ~ Applications, data = my_table)
 summary(glm_fit)
 
-mean(predict(glm_fit, my_newtable)-my_newtable$Accepted)
+mean((predict(glm_fit, my_newtable)-my_newtable$Accepted)^2)
 cv.error[1]
-
