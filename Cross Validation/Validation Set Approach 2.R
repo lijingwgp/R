@@ -4,3 +4,5 @@ Hitters=na.omit(Hitters)
 set.seed(1)
 train=sample(c(TRUE,FALSE), nrow(Hitters),rep=TRUE)
 test=(!train)
+Hitters.train = Hitters[train,]
+Hitters.test = Hitters[test,]
