@@ -39,7 +39,7 @@ cv.err$delta
 # Repeat this process for increasingly complex polynomials...
 
 cv.error <- c()
-# loop through the process 5 times 
+# loop through the process 10 times 
 for (i in 1:10){
  glm.fit <- glm(mpg~poly(horsepower,i),data=Auto)
  cv.error[i] <- -cv.glm(Auto,glm.fit)$delta[1]
