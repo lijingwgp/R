@@ -9,6 +9,7 @@ installIfAbsentAndLoad <- function(neededVector) {
     require(thispackage, character.only = T)
   }
 }
+
 ##############################
 ### Load required packages ###
 ##############################
@@ -16,11 +17,11 @@ installIfAbsentAndLoad <- function(neededVector) {
 needed  <-  c("ISLR", "MASS", "car")     
 installIfAbsentAndLoad(needed)
 #######################################
-#### Linear Regression ################
+######### Linear Regression ###########
 #######################################
 
 ####################################################
-### ISLR Lab Part 1: Simple Linear Regression ######
+#### ISLR Lab Part 1: Simple Linear Regression #####
 ####################################################
 ## Investigate the Boston data frame
 ?Boston
@@ -32,28 +33,28 @@ lm.fit <- lm(medv ~ lstat, data = Boston)
 str(lm.fit)
 ## Display a summary of the regression model
 summary(lm.fit)
-names(lm.fit)
-head(lm.fit$model )         ### Retrieve via col names
+names(lm.fit)               ## names() function retrieve what other pieces of information are stored in lm.fit
+head(lm.fit$model)          ## Return a preview of the model's x and y values
 lm.fit$coefficients
 head(lm.fit$residuals)
-lm.fit$residuals
 ## Extractor functions
-coef(lm.fit)
-confint(lm.fit)             ### For CIs for parameter estimates
+coef(lm.fit)                ## Extract coefficients of the model
+confint(lm.fit)             ## For CIs for parameter estimates
 confint(lm.fit, level=.99)
-predict(lm.fit, data.frame(lstat=(c(5,10,15))), interval="confidence")    ### For CIs of points
-predict(lm.fit, data.frame(lstat=(c(5,10,15))), interval="prediction")    ### For PIs of points
+predict(lm.fit, data.frame(lstat=(c(5,10,15))), interval="confidence")    ## For CIs of points
+predict(lm.fit, data.frame(lstat=(c(5,10,15))), interval="prediction")    ## For PIs of points
 plot(Boston$lstat, Boston$medv)
 abline(lm.fit, lwd=3, col="red")
 plot(Boston$lstat, Boston$medv, col="red", pch=20)
 plot(Boston$lstat, Boston$medv, col="red", pch="+")
 plot(1:20, 1:20, pch=1:20)
-par(mfrow=c(2, 2))                       ### Divide plot window into 2x2
-plot(lm.fit)                             ### Plot 4 standard diagnostic plots ? see Section 3.3.3
-plot(predict(lm.fit), residuals(lm.fit)) ### Suggests non-linearity
-plot(predict(lm.fit), rstudent(lm.fit))  ### Ditto ? scale is in num t-StdDevs
-plot(hatvalues(lm.fit))                  ### Plots leverage of points
-which.max(hatvalues(lm.fit))             ### ID highest-leverage point
+par(mfrow=c(2, 2))                       ## Divide plot window into 2x2
+plot(lm.fit)                             ## Plot 4 standard diagnostic plots
+plot(predict(lm.fit), residuals(lm.fit)) ## residuals() function computes the residuals from a linear regression fit
+                                         ## Plotting the residuals against the fitted values suggests non-linearity
+plot(predict(lm.fit), rstudent(lm.fit))  ## rstudent() function will return the studentized residuals
+plot(hatvalues(lm.fit))                  ## Plots leverage of points
+which.max(hatvalues(lm.fit))             ## Highest-leverage point location
 par(mfrow=c(1,1))
 
 ## Assessing the accuracy of the coefficient estiimates 
@@ -62,7 +63,7 @@ par(mfrow=c(1,1))
 ## regression model that regresses median house value (medv)
 ## on percentage of households with low socioeconomic status
 ## (lstat)
-lm.fit <- lm(medv ~ lstat, data=Boston)    #For comparison
+lm.fit <- lm(medv ~ lstat, data=Boston)          ## For comparison
 summary(lm.fit)
 ## Using the expressions in equations on Slide 7...
 beta1hat <- sum((Boston$lstat - mean(Boston$lstat)) * (Boston$medv - mean(Boston$medv))) / sum((Boston$lstat - mean(Boston$lstat)) ^ 2)  
@@ -92,7 +93,7 @@ myconfint
 ## Conduct a hypothesis of H0:beta1=0 H1:beta1<>0 - Slide 19
 tstat <- beta1hat / se1
 tstat
-pvalue <- 2 * pt(tstat, n - 2)          ### p-value for 2-tailed test
+pvalue <- 2 * pt(tstat, n - 2)                   ## p-value for 2-tailed test
 pvalue
 ## Reject H0 since pvalue is VERY small
 ## Calculate TSS (Slide 24) and r-squared Slide 27
@@ -103,17 +104,19 @@ rsquared
 ## For simple regression, R-squared is the square of the
 ## correlation coefficient between x and y
 cor(Boston$lstat, Boston$medv) ^ 2   
-######################################################
+
+###############################################
 ### ISLR Lab: Multiple Linear Regression ######
-######################################################
-lm.fit <- lm(medv ~ lstat + age, data = Boston)  ### Basic syntax is lm(y ~ a + b + c)
+###############################################
+lm.fit <- lm(medv ~ lstat + age, data = Boston)  ## Basic syntax is lm(y ~ a + b + c)
 summary(lm.fit)
-lm.fit <- lm(medv ~ ., data = Boston)            ### the "." is shorthand for "everything"
+lm.fit <- lm(medv ~ ., data = Boston)            ## The "." is shorthand for "everything"
 summary(lm.fit)
-vif(lm.fit)                                      ### displays variance inflation factors. VIF > 5 to 10 implies multicollinearity
-lm.fit1 <- lm(medv ~ . -age, data=Boston)        ### Excludes age
+vif(lm.fit)                                      ## Displays variance inflation factors. VIF > 5 to 10 implies multicollinearity
+lm.fit1 <- lm(medv ~ . -age, data=Boston)        ## Excludes age
 summary(lm.fit1)                                             
-lm.fit1 <- update(lm.fit, ~ . -age)              ### achieves same result
+lm.fit1 <- update(lm.fit, ~ . -age)              ## Achieves same result
+
 #######################################
 ### ISLR Lab: Regression Extensions  ##
 #######################################
