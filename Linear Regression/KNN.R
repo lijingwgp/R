@@ -85,7 +85,6 @@ print(paste("My Test MSE is computed when k is found to have the optimal value o
 
 
 
-
 rm(list=ls())
 ##################
 ### Question 2 ###
@@ -166,7 +165,6 @@ print(paste("My best Training error rate occured with k =", iterates[which.min(t
 knn.pred <- knn(train.x, test.x, train.y, k=iterates[which.min(validate.error)])
 test.error <- mean(knn.pred != test.y)
 print(paste("My Test error rate is computed when k is found to have the optimal value of", iterates[which.min(validate.error)], "and thus, my Test error rate is", test.error[which.min(test.error)]))
-
 
 
 
