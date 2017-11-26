@@ -21,7 +21,7 @@ rm(list=ls())
 
 Hitters=na.omit(Hitters)
 set.seed(1)
-train=sample(c(TRUE,FALSE), nrow(Hitters),rep=TRUE)
+train=sample(c(TRUE,FALSE),nrow(Hitters),rep=TRUE)
 test=(!train)
 
 # Now, we apply regsubsets() to the training set in order to perform best
