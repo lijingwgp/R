@@ -7,7 +7,7 @@ rm(list=ls())
 # We now ask whether the lasso can yield either a more accurate or a more 
 # interpretable model than ridge regression.
 
-# In order to ???t a lasso model, we once again use the glmnet() function; 
+# In order to fit a lasso model, we once again use the glmnet() function; 
 # however, this time we use the argument alpha=1. 
 require(glmnet)
 require(ISLR)
@@ -24,8 +24,8 @@ grid = 10^seq(10,-2,length=100)
 lasso.mod=glmnet(x[train,],y[train],alpha=1,lambda=grid) 
 plot(lasso.mod)
 
-# We can see from the coe???cient plot that depending on the choice of 
-# tuning parameter, some of the coe???cients will be exactly equal to zero. 
+# We can see from the coeficient plot that depending on the choice of 
+# tuning parameter, some of the coefficients will be exactly equal to zero. 
 # We now perform cross-validation and compute the associated test error.
 set.seed(1)
 cv.out = cv.glmnet(x[train,],y[train],alpha=1)
@@ -36,7 +36,7 @@ mean((lasso.pred-y.test)^2)
 
 # This is very similar to the test MSE of ridge regression with lambda chosen 
 # by cross-validation. However, the lasso has a substantial advantage over ridge 
-# regression in that the resulting coe???cient estimates are sparse. 
+# regression in that the resulting coefficient estimates are sparse. 
 out=glmnet(x,y,alpha=1,lambda=grid)
 lasso.coef=predict (out ,type="coefficients",s=bestlam)[1:20,]
 lasso.coef
