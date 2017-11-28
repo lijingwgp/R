@@ -48,3 +48,6 @@ excessInv <- pmax(excessInv, 0)                  # determine which location has 
 totalRefund <- excessInv * 2.5
 totalProfit <- totalRevenue - totalCost + totalRefund
 totalProfit
+
+# randomly generated numbers from exponential distribution
+rexp(1) 
