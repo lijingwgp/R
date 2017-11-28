@@ -90,12 +90,12 @@ Smarket.2005 <- Smarket[!train, ] #Smarket.2005 is a data frame of  test rows
 dim(Smarket.2005)
 Direction.2005 <- Smarket$Direction[!train]  #Direction.2005 is a vector of "Up" and "Down" in the test data frame
 # Build a Classification model using the test set (note the
-# addition of the last paramater "subset="
+# addition of the last paramater "subset=")
 glm.fit <- glm(Direction~Lag1+Lag2+Lag3+Lag4+Lag5+Volume, data=Smarket, family=binomial, subset=train)
 # Use the model to create test set predictions
 glm.probs <- predict(glm.fit, Smarket.2005, type="response")
 # compute the test error rate
-glm.pred <- rep("Down", nrow(Smarket.2005))   #Why not length(train)?
+glm.pred <- rep("Down", nrow(Smarket.2005))
 glm.pred[glm.probs>.5] <- "Up"
 mean(glm.pred==Direction.2005)
 mean(glm.pred!=Direction.2005)
