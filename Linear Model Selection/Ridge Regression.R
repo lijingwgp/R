@@ -89,10 +89,10 @@ mean((ridge.pred -y.test)^2)
 
 # We now check whether there is any benefit to performing ridge regression with lambda = 4 instead of 
 # just performing least squares regression. Recall that least squares is simply ridge regression with lambda = 0.
-lm.fit = lm(y~x, subset=train)
-ridge.pred=predict (ridge.mod, s=0, newx=x[test, ], exact=T)
+ridge.pred=predict (x=x[train,], y=y[train], ridge.mod, s=0, newx=x[test, ], exact=T)
 mean((ridge.pred-y.test)^2)
-predict (ridge.mod ,s=0,exact=T,type="coefficients")[1:20,]
+(lm.fit = lm(y~x, subset=train))
+predict (x=x[train,], y=y[train], ridge.mod ,s=0,exact=T,type="coefficients")[1:20,]
 
 # In general, instead of arbitrarily choosing lambda = 4, it would be better to use cross-validation to choose 
 # the tuning parameter lambda. We can do this using the built-in cross-validation function, cv.glmnet().
