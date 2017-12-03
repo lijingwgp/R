@@ -18,13 +18,14 @@ x
 # p(0.30) -- demand 200
 # p(0.15) -- demand 250
 # p(0.05) -- demand 300
-d <- c(100,150,200,250,300)
-p <- c(0.3,0.2,0.3,0.15,0.05)
+demand <- c(100,150,200,250,300)
+prob <- c(0.3,0.2,0.3,0.15,0.05)
 
-cumsum(p)
-cdf <- cumsum(p)
-min(which(cdf >= runif(1)))
-d[min(which(cdf >= runif(1)))]
+cumsum(prob)
+cdf <- cumsum(prob)                              # calculate cumulate sum of the probabilities
+min(which(cdf >= runif(1)))                      # returns the minimum demand of which are greater than a randomly generated 
+                                                 # probabilities from the uniform distribution
+d[min(which(cdf >= runif(1)))]                   
 
 idx <- function(prob){min(which(cdf >= prob))}
 idx(0)
