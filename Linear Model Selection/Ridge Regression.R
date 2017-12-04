@@ -106,10 +106,10 @@ plot(cv.out)
 
 # Therefore, we see that the value of lambda that results in the smallest crossvalidation error is 212.
 # What is the test MSE associated with this value of lambda
-ridge.pred=predict (ridge.mod ,s=bestlam ,newx=x[test,]) 
+ridge.pred=predict (ridge.mod,s=bestlam,newx=x[test,]) 
 mean((ridge.pred-y.test)^2) 
 
 # Finally, we re-fit our ridge regression model on the full data set, using the value of lambda chosen by cross-validation, 
 # and examine the coefficient estimates.
-out=glmnet(x,y,alpha=0) 
-predict (out ,type="coefficients",s=bestlam)[1:20,] 
+ridge.mod=glmnet(x,y,alpha=0,lambda=bestlam,thresh=1e-12) 
+ridge.coef=predict(ridge.mod,type="coefficients",s=bestlam)[1:20,] 
