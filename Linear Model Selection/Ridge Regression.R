@@ -26,6 +26,7 @@ y = Hitters$Salary
 require(glmnet)
 grid = 10^seq(10,-2,length=100)                 
 ridge.mod = glmnet(x,y,alpha = 0,lambda = grid)
+# ridge.mod = glmnet(x,y,alpha = 0,lambda = grid, family = "binomial")
 
 # By default the glmnet() function performs ridge regression for an automatically selected range 
 # of lambda values. However, here we have chosen to implement the function over a grid of values.
@@ -51,7 +52,7 @@ coef(ridge.mod)[,60]
 sqrt(sum(coef(ridge.mod)[-1,60]^2)) 
 
 # We can use the predict() function for a number of purposes. For instance, we can obtain the ridge regression 
-# coe???cients for a new value of lambda, say 50:
+# coefficients for a new value of lambda, say 50:
 predict (ridge.mod,s=50,type="coefficients")[1:20,] 
 
 # We now split the samples into a training set and a test set in order to estimate the 
@@ -71,6 +72,7 @@ y.test = y[test]
 
 ridge.mod=glmnet(x[train,],y[train],alpha=0,lambda=grid,thresh=1e-12) 
 ridge.pred=predict(ridge.mod,s=4,newx=x[test,])
+# ridge.pred=predict(ridge.mod,s=4,newx=x[test,],type="class")
 mean((ridge.pred-y.test)^2)         
 
 # Note the use of the predict() function again. This time we get predictions for a test set, by replacing 
