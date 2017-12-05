@@ -22,22 +22,24 @@ y.test = y[test]
 
 grid = 10^seq(10,-2,length=100) 
 lasso.mod=glmnet(x[train,],y[train],alpha=1,lambda=grid) 
+# lasso.mod=glmnet(x[train,],y[train],alpha=1,lambda=grid,family="binomial") 
 plot(lasso.mod)
 
 # We can see from the coeficient plot that depending on the choice of 
 # tuning parameter, some of the coefficients will be exactly equal to zero. 
 # We now perform cross-validation and compute the associated test error.
 set.seed(1)
-cv.out = cv.glmnet(x[train,],y[train],alpha=1)
+cv.out = cv.glmnet(x,y,alpha=1)
 plot(cv.out)
 bestlam = cv.out$lambda.min
 lasso.pred = predict(lasso.mod,s=bestlam,newx = x[test,])
+# lasso.pred = predict(lasso.mod,s=bestlam,newx=x[test,], typle="class")
 mean((lasso.pred-y.test)^2)
 
 # This is very similar to the test MSE of ridge regression with lambda chosen 
 # by cross-validation. However, the lasso has a substantial advantage over ridge 
 # regression in that the resulting coefficient estimates are sparse. 
-out=glmnet(x,y,alpha=1,lambda=grid)
-lasso.coef=predict (out ,type="coefficients",s=bestlam)[1:20,]
+out=glmnet(x,y,alpha=1,lambda=bestlam)
+lasso.coef=predict(out,type="coefficients",s=bestlam)[1:20,]
 lasso.coef
 lasso.coef[lasso.coef!=0]
