@@ -384,6 +384,7 @@ plot(index, new_earnings_total2, col=ifelse(index == bestq2,"forestgreen","black
 
 q1 = sample(40:70,100,replace = T)
 q2 = sample(60:90,100,replace = T)
+location = c()
 for(a in 1:30){
   best_earnings = c()
   for(i in 1:100){
