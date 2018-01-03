@@ -54,7 +54,7 @@ fit2 = lm(wage~ns(age, df=4, knots = c(25,40,60)), data = Wage)
 # We would have a total of 4 degrees of freedom
 # each predictor space would need one regression coefficient
 dim(ns(Wage$age, knots = c(25,40,60)))
-# This would produce 7 predictor space intervals
+# This would automatically produce 7 knots across the predictor space interval 
 attr(ns(Wage$age, df=8), "knots") 
 
 
