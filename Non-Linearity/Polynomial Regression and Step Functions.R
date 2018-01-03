@@ -10,7 +10,7 @@ coef(summary(fit))
 
 # The poly() command allows us to avoid having to write out a long formula with powers of age
 # There are several other equivalent ways of ﬁtting this model
-# We can create also the polynomial basis functions or use cbind()
+# We can also create the polynomial basis functions or use cbind()
 fit2a <- lm(wage~age+I(age^2)+I(age^3)+I(age^4),data = Wage)
 summary((fit2a))
 coef(summary((fit2a)))
