@@ -24,6 +24,7 @@ lines(age_grid, pred$fit - 2*pred$se, lty="dashed")
 # 3 come from the cubic polynomial function (X, X^2, X^3)
 # The other 3 come from three predictor space interval
 dim(bs(Wage$age, knots = c(25,40,60)))
+dim(bs(age,df=6))
 # We could also use the df option to produce a spline with knots at uniform quantiles of the data
 attr(bs(Wage$age, df=6), "knots") 
 # In this case R chooses knots at ages 33.8,42.0, and 51.0, which correspond to the 
@@ -64,7 +65,9 @@ title("Smoothing Spline")
 fit = smooth.spline(Wage$age, Wage$wage, df=16) 
 fit2 = smooth.spline(Wage$age, Wage$wage, cv = TRUE)
 fit2$df
-lines(fit2, col="blue", lwd=2) 
+lines(fit,col="red",lwd=2)
+lines(fit2, col="blue", lwd=2)
+legend("topright",legend=c("16 DF","6.8 DF"),col=c("red","blue"),lty=1,lwd=2,cex=.8)
 # Notice that in the ﬁrst call to smooth.spline(), we speciﬁed df=16
 # The function then determines which value of λ leads to 16 degrees of freedom
 # In the second call to smooth.spline(), we select the smoothness level by 
@@ -78,3 +81,4 @@ fit=loess(wage~age, span=.2, data=Wage)
 fit2=loess(wage~age, span=.5, data=Wage) 
 lines(age_grid, predict (fit, data.frame(age=age_grid)), col="red", lwd=2) 
 lines(age_grid, predict (fit2, data.frame(age=age_grid)), col="blue", lwd=2)
+legend("topright",legend=c("Span=0.2","Span=0.5"),col=c("red","blue"),lty=1,lwd=2,cex=.8)
