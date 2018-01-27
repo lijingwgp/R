@@ -41,7 +41,7 @@ dim(bs(Wage$age, knots = c(25,40,60), degree = 4))
 # 5 degrees of freedom, including the intercept
 #
 # There would be 4 knots automatically chosen since these 4 knots would have 4 predictor
-# coefficients that need to be determined, one for each predictor space interval
+# coefficients that need to be determined, and we have specified the total df to be 8
 attr(bs(Wage$age, df=8, degree = 4), "knots") 
 
 
