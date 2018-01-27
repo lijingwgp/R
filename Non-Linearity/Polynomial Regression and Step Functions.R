@@ -38,7 +38,7 @@ matlines (age_grid, se.bands, lwd=1, col="blue", lty=3)
 # polynomial to use. One way to do this is by using hypothesis tests
 # We now ﬁt models ranging from linear to a degree-5 polynomial and seek to determine 
 # the simplest model which is suﬃcient to explain the relationship between wage and age
-
+#
 # We use the anova() function, in order to test the null
 # hypothesis that a model M1 is suﬃcient to explain the data against the alternative 
 # hypothesis that a more complex model M2 is required
@@ -57,7 +57,7 @@ anova(fit.1,fit.2,fit.3,fit.4,fit.5)
 # is approximately 5% while the degree-5 polynomial Model 5 seems unnecessary 
 # because its p-value is 0.37. Hence, either a cubic or a quartic polynomial appear to 
 # provide a reasonable ﬁt to the data, but lower- or higher-order models are not justiﬁed 
-
+#
 # As an alternative to using hypothesis tests and ANOVA, we could choose the polynomial 
 # degree using cross-validation
 
@@ -69,6 +69,7 @@ anova(fit.1,fit.2,fit.3,fit.4,fit.5)
 # Once again, we make predictions using the predict() function
 fit=glm(I(wage >250)~poly(age,4), data=Wage, family='binomial') 
 preds=predict(fit, newdata = list(age = age_grid), se=T)
+pfit=exp(preds$fit) / (1+exp(preds$fit)) 
 
 
 # The default prediction type for a glm() model is type="link", which is what we use here 
@@ -81,9 +82,9 @@ se.bands = exp(se.bands.logit)/(1+exp(se.bands.logit))
 # Note that we could have directly computed the probabilities by selecting 
 # the type="response" option in the predict() function
 #preds=predict(fit, newdata =list(age=age_grid), type="response", se=T)
+#se.bands = cbind(preds$fit+2*preds$se.fit, preds$fit-2*preds$se.fit)
 plot(Wage$age, I(Wage$wage > 250), xlim=age_limits, type="n", ylim=c(0,.2)) 
 points(jitter(Wage$age), I((Wage$wage > 250)/5), cex=.5, pch="|", col="darkgrey") 
-pfit=exp(preds$fit) / (1+exp(preds$fit)) 
 lines(age_grid, pfit, lwd=2, col="blue")
 #lines(age_grid, preds$fit, lwd=2, col="blue")
 matlines(age_grid, se.bands, lwd = 1, col = 'blue', lty = 3)
@@ -94,7 +95,7 @@ matlines(age_grid, se.bands, lwd = 1, col = 'blue', lty = 3)
 # We could also have speciﬁed our own cutpoints directly using the breaks option
 # The function cut() returns an ordered categorical variable
 # The lm() function then creates a set of dummy variables for use in the regression
-
+#
 # The age<33.5 category is left out, so the intercept coeﬃcient of $94,160 can be interpreted 
 # as the average salary for those under 33.5 years of age
 # and the other coeﬃcients can be interpreted as the average additional salary for those 
