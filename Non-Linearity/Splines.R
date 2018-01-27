@@ -20,9 +20,6 @@ lines(age_grid, pred$fit - 2*pred$se, lty="dashed")
 # total of 6 degrees of freedom
 # Recall that a cubic spline with three knots has seven degrees of freedom
 # These degrees of freedom are used up by an intercept
-# So six basis functions indicates a 6 degrees of freedom
-# 3 come from the cubic polynomial function (X, X^2, X^3)
-# The other 3 come from three predictor space interval
 dim(bs(Wage$age, knots = c(25,40,60)))
 dim(bs(age,df=6))
 # We could also use the df option to produce a spline with knots at uniform quantiles of the data
