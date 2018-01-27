@@ -52,7 +52,7 @@ pred2 = predict(fit2, newdata = list(age=age_grid), se = T)
 lines(age_grid, pred2$fit, col = 'red', lwd = 2)
 # As with the bs() function, we could instead specify the knots 
 # directly using the knots option
-fit2 = lm(wage~ns(age, df=4, knots = c(25,40,60)), data = Wage)
+fit2 = lm(wage~ns(age, knots = c(25,40,60)), data = Wage)
 
 
 # We would have a total of 4 degrees of freedom
