@@ -64,7 +64,7 @@ attr(ns(Wage$age, df=8), "knots")
 
 # In order to ﬁt a smoothing spline, we use the smooth.spline() function
 plot(Wage$age, Wage$wage, xlim=age_limits, cex=.5, col="darkgrey") 
-title("Smoothing Spline") 
+title("Smoothing Spline", outer = T) 
 fit = smooth.spline(Wage$age, Wage$wage, df=16) 
 fit2 = smooth.spline(Wage$age, Wage$wage, cv = TRUE)
 fit2$df
