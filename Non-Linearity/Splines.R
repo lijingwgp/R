@@ -26,7 +26,6 @@ lines(age_grid, pred$fit - 2*pred$se, lty="dashed")
 # An intercept essentially frees up one degrees of freedom
 # Therefore, by excluding the intercept, we have a remaining of 6 degrees of freedom
 dim(bs(Wage$age, knots = c(25,40,60)))
-dim(bs(age,df=6))
 # We could also use the df option to produce a spline with knots at uniform quantiles of the data
 attr(bs(Wage$age, df=6), "knots") 
 # In this case R chooses knots at ages 33.8,42.0, and 51.0, which correspond to the 
