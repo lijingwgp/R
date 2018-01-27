@@ -20,7 +20,7 @@ lines(age_grid, pred$fit - 2*pred$se, lty="dashed")
 # total of 6 degrees of freedom
 # Recall that a cubic spline with three knots has seven degrees of freedom in total
 # An intercept essentially frees up one degrees of freedom
-# Therefore, we have a total of 6 degrees of freedom remains
+# Therefore, we have a remaining of 6 degrees of freedom
 dim(bs(Wage$age, knots = c(25,40,60)))
 dim(bs(age,df=6))
 # We could also use the df option to produce a spline with knots at uniform quantiles of the data
