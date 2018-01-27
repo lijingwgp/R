@@ -79,7 +79,7 @@ legend("topright",legend=c("16 DF","6.8 DF"),col=c("red","blue"),lty=1,lwd=2,cex
 
 # In order to perform local regression, we use the loess() function
 plot(Wage$age, Wage$wage, xlim=age_limits, cex=.5, col="darkgrey") 
-title("Local Regression") 
+title("Local Regression", outer = T) 
 fit=loess(wage~age, span=.2, data=Wage) 
 fit2=loess(wage~age, span=.5, data=Wage) 
 lines(age_grid, predict (fit, data.frame(age=age_grid)), col="red", lwd=2) 
