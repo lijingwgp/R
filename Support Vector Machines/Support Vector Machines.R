@@ -40,5 +40,3 @@ summary(tune.out)
 # We can view the test set predictions for this model by applying the predict() 
 table(true=dat[-train,"y"], pred=predict(tune.out$best.model, newx=dat[-train,]))
 # 39% of test observations are misclassiﬁed by this SVM.
-
-
