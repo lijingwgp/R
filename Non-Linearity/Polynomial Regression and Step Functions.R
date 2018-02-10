@@ -103,3 +103,5 @@ matlines(age_grid, se.bands, lwd = 1, col = 'blue', lty = 3)
 table(cut(Wage$age, 4))
 fit = lm(wage~cut(age, 4), data = Wage)
 coef(summary(fit))
+# Note that the cut() function wants the number of intervals to cut the data into, 
+# not the number of steps inside the range. So cut(age,1) produces an error and cut(age,2) has one step
