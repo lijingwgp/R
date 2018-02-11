@@ -161,7 +161,7 @@ lines(age_grid, lm.pred, col="blue", lwd=2)
 # set seed to 5082, then investigate step functions using steps from 1 to 12
 # use 10-fold cross validation to choose the optimal number of steps
 set.seed(5082)
-err = rep(NA, 10)
+err = rep(NA, 13)
 for(i in 2:13){
   Wage$age.cut = cut(Wage$age, i)
   glm.fit.cut = glm(wage~age.cut, data = Wage)
