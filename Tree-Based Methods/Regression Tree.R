@@ -22,7 +22,7 @@ installIfAbsentAndLoad(needed)
 ####################################
 ########## partition data ##########
 ### training, validate, test subsets 
-########## (60/20/20) ##############
+###########  (60/20/20) ############
 ####################################
 set.seed(527)
 Hitters <- na.omit(Hitters)[,-c(14,15,20)]
