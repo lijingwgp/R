@@ -88,7 +88,7 @@ plotcp(rpart)
 xerr<-rpart$cptable[,"xerror"]
 ## determines the lowest CV error
 ## this step locates the row index which corrospond to the lowest CV error from the cp table
-minxerr<-which(xerr==min(xerr))
+minxerr<-which.min(xerr)
 ## this step determines the lowest cp that corrospond to the row where the lowest CV error occurs
 mincp<-rpart$cptable[minxerr,"CP"]
 ## to summarize, we first find the lowest CV error from the cp table, then locate
