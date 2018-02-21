@@ -61,6 +61,7 @@ rpart<-rpart(Salary ~ .,data=train, method="anova",
 ## inspect the cp table
 printcp(rpart)
 rpart$cptable
+plotcp(rpart)
 ## useless
 print(rpart)
 summary(rpart)
