@@ -37,7 +37,8 @@ test <- churndata[testrows,]
 ###create and examine classification model###
 rpart <- rpart(churn ~ .,data=train, method="class",parms=list(split="information"),
                control=rpart.control(usesurrogate=0, maxsurrogate=0,cp=0, minsplit=2,minbucket=1))
-printcp(rpart)                         
+printcp(rpart)
+plotcp(rpart)
 
 
 ###access test error rates###
