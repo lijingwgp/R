@@ -65,7 +65,7 @@ table1
 (table1[1,2] + table1[2,1])/sum(table1)
 
 
-### Let's try using Gini instead of entropy and compare###
+###let's try using Gini instead of entropy and compare###
 rpart.gini <- rpart(churn ~ .,data=train, method="class",parms=list(split="gini"),control=rpart.control(
   usesurrogate=0, maxsurrogate=0,cp=0, minsplit=2,minbucket=1))
 rpart.gini$cptable
@@ -79,7 +79,7 @@ table.gini
 (table.gini[1,2] + table.gini[2,1])/sum(table.gini)
 
 
-#Add loss matrix
+###add loss matrix###
 rpart2 <- rpart(churn ~ ., data=train, method="class", parms=list(split="information"), control=rpart.control(usesurrogate=0, 
           maxsurrogate=0, cp=0, minsplit=2, minbucket=1, loss = matrix(c(0,1,6,0), byrow = T, nrow = 2)))
 rpart2$cptable
