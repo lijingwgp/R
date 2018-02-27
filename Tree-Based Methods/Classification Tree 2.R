@@ -68,7 +68,6 @@ table1
 ### Let's try using Gini instead of entropy and compare###
 rpart.gini <- rpart(churn ~ .,data=train, method="class",parms=list(split="gini"),control=rpart.control(
   usesurrogate=0, maxsurrogate=0,cp=0, minsplit=2,minbucket=1))
-
 rpart.gini$cptable
 min.xerror <- which.min(rpart.gini$cptable[,'xerror'])
 min.cp <- rpart.gini$cptable[min.xerror,"CP"]
