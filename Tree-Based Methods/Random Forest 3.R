@@ -53,10 +53,9 @@ head(rf$err.rate)
 plot(rf2, main="Error Rates for Random Forest")
 legend("topright", c("OOB", "No", "Yes"), text.col=1:6, lty=1:3, col=1:3)
 #Q3:  Find the minimum OOB (out-of-bag) error:
-min.err <- min(rf2$err.rate[,"OOB"])
-min.err.idx <- which(rf2$err.rate[,"OOB"]== min.err)
+min.err.idx <- which.min(rf2$err.rate[,"OOB"])
 min.err.idx
-rf2$err.rate[min.err.idx[1],]
+rf2$err.rate[min.err.idx,]
 #Q4:  Rebuild the forest with the number of trees that minimizes the OOB error rate, and observe its performance.
 set.seed(460)
 rf3 <- randomForest(formula=RainTomorrow ~ .,data=weather[train,],ntree= min.err.idx[1], mtry=4,
