@@ -48,8 +48,7 @@ importance(rf)[order(importance(rf)[,"MeanDecreaseAccuracy"], decreasing=T),]
 #head(rf$err.rate)
 plot(rf, main="Error Rates for Random Forest")
 legend("topright", c("OOB", "No", "Yes"), text.col=1:6,lty=1:3,col=1:3)
-min.err <- min(rf$err.rate[,"OOB"])
-min.err.idx <- which(rf$err.rate[,"OOB"]==min.err)
+min.err.idx <- which.min(rf$err.rate[,"OOB"])
 min.err.idx
 rf$err.rate[min.err.idx,]
 
