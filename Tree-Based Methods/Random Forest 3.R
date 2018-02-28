@@ -58,7 +58,7 @@ min.err.idx
 rf2$err.rate[min.err.idx,]
 #Q4:  Rebuild the forest with the number of trees that minimizes the OOB error rate, and observe its performance.
 set.seed(460)
-rf3 <- randomForest(formula=RainTomorrow ~ .,data=weather[train,],ntree= min.err.idx[1], mtry=4,
+rf3 <- randomForest(formula=RainTomorrow ~ .,data=weather[train,],ntree= min.err.idx, mtry=4,
                    importance=TRUE,localImp=TRUE,na.action=na.roughfix,replace=FALSE, sampsize = c(35,35))
 rf3
 #Q5:  Evaluate by scoring the training set
