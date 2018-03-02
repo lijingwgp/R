@@ -34,6 +34,7 @@ rf <- randomForest(formula=churn ~ .,data=data[train,],ntree=500,mtry=4,
 	importance=TRUE,localImp=TRUE,na.action=na.roughfix,replace=FALSE)
 head(rf$predicted,25)       #returns the decision for each training observations to a specific class
 #mtry is the number of predictors randomly sampled as candidates at each split
+#mtry typically is set to the sqrt root of number of predictors
 #importance determines whether variable importance is assessed
 #localimp: should casewise importance measure be computed? (Setting this to TRUE will override importance.)
 #na.action is specified method for dealing with NA's in the data
