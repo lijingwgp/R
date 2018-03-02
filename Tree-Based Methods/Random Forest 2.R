@@ -29,9 +29,10 @@ train <- sample(nobs, 0.7*nobs)
 
 
 ###Grow a 500-tree forest
+###then look at the predicted probabilities of the train data set
 rf <- randomForest(formula=churn ~ .,data=data[train,],ntree=500,mtry=4,
 	importance=TRUE,localImp=TRUE,na.action=na.roughfix,replace=FALSE)
-head(rf$predicted,25)
+head(rf$predicted,25)       #returns the decision for each training observations to a specific class
 #mtry is the number of predictors randomly sampled as candidates at each split
 #importance determines whether variable importance is assessed
 #localimp: should casewise importance measure be computed? (Setting this to TRUE will override importance.)
@@ -39,13 +40,17 @@ head(rf$predicted,25)
 #na.roughfix replaces NA's with column medians
 
 
-###Display Variable Importance   
+###Display Variable Importance 
+###MeanDecreaseAccuracy indicates the average number of observations that 
+###would be misclassified by removing the variable from the model
 importance(rf)[order(importance(rf)[,"MeanDecreaseAccuracy"], decreasing=T),]
-#MeanDecreaseAccuracy indicates the average number of observations that would be misclassified by removing the variable from the model.
+###Display a chart of Variable Importance
+varImpPlot(rf, main="Variable Importance in the Random Forest: Classification")
 
 
 ###Examine Error Rates for the number of trees
-#head(rf$err.rate)
+###then determine how many number of trees we should grow
+head(rf$err.rate)           #returns error rate of each number of trees grew
 plot(rf, main="Error Rates for Random Forest")
 legend("topright", c("OOB", "No", "Yes"), text.col=1:6,lty=1:3,col=1:3)
 min.err.idx <- which.min(rf$err.rate[,"OOB"])
@@ -53,23 +58,27 @@ min.err.idx
 rf$err.rate[min.err.idx,]
 
 
-###Rebuild the forest with the number of trees that minimizes the OOB error rate - use the first one if there is more than one minimum.
+###Rebuild the forest with the number of trees that minimizes the OOB error rate
+###use the first one if there is more than one minimum
 set.seed(460)
 rf <- randomForest(formula=churn ~ .,data=data[train,],ntree= min.err.idx,mtry=4,
 	importance=TRUE,localImp=TRUE,na.action=na.roughfix,replace=FALSE)
 
 
-###Look at voting info for each observation
-head(rf$votes)
+###Look at voting info for each training observation
+head(rf$votes)              #returns probabilities for each training observations being in their predicted class
 
 
 ###Plot the OOB ROC curve and calculate AUC
 require(pROC)               #required for roc.plot
 require(verification)       #required for roc.area
+###convert the yes and no's to factors first
+###then convert to 1's and 2's
+###then substruct 1 to change the value of this column to 0's and 1's
 aucc <- roc.area(as.integer(as.factor(data[train, "churn"]))-1,rf$votes[,2])
 aucc$A
 aucc$p.value                #null hypothesis: aucc=0.5 
-#windows()                   #open a new graphics window
+#windows()                  #open a new graphics window
 roc.plot(as.integer(as.factor(data[train,"churn"]))-1,rf$votes[,2], main="", xlab = "False Positive Rate", ylab = "True Positive Rate")
 legend("bottomright", bty="n",
        sprintf("Area Under the Curve (AUC) = %1.3f", aucc$A))
