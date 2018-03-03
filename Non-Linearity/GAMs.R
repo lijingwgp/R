@@ -64,14 +64,15 @@ plot.gam(gam.local, se=TRUE, col = 'green')
 gam.local.interaction = gam(wage~lo(year, age, span = 0.5) + education, data = Wage)
 # This model fits a two-term model, in which the ﬁrst term is an interaction 
 # between year and age, ﬁt by a local regression surface
-install.packages("akima")
-library(akima)
 par(mfrow = c(1,2))
 plot(gam.local.interaction)
 
 
 # In order to ﬁt a logistic regression GAM, we once again use the I() function 
 # in constructing the binary response variable, and set family=binomial
+# y <- rep("Below250", 250)
+# y[Wage$wage > 250] <- "Above250"
+# y <- factor(y, order=T, levels=c('Below250', 'Above250'))
 gam.log = gam(I(wage>250)~year + s(age,5) + education, family = binomial, data = Wage)
 par(mfrow = c(1,3))
 plot(gam.log, se=T, col = 'green')
