@@ -4,6 +4,8 @@
 # choice of basis functions, we can simply do this using the lm() function
 library(ISLR)
 library(splines)
+library(gam)
+library(akima)
 gam1 = lm(wage~ns(year,4) + ns(age,5) + education, data=Wage) 
 
 
