@@ -24,9 +24,6 @@ numfolds <- 10
 fold.indices <- cut(1:n, breaks=numfolds, labels=FALSE)
 #Perform 10 fold cross validation
 mse <- rep(0, numfolds)
-# Build the model with the full data frame (this is the
-# point - don't need to withhold rows for validation/test)
-my.final.model <- glm(mpg ~ poly(horsepower,2),data=mydf)
 # Estimate the expected value of the true MSE
 for(i in 1:numfolds){
   #Segement your data by fold using the which() function 
