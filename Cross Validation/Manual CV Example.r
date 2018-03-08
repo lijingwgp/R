@@ -31,7 +31,7 @@ for(i in 1:numfolds){
   test.data <- mydf[test.indices, ]
   train.data <- mydf[-test.indices, ]
   glm.fit=glm(mpg ~ poly(horsepower,2),data=train.data)
-  mse[i] <- mean((predict.glm(glm.fit, test.data[-1], type = "response")   - test.data$mpg) ^ 2)
+  mse[i] <- mean((predict.glm(glm.fit, test.data[-1], type = "response")-test.data$mpg) ^ 2)
 }
 mean(mse)  # This is the final estimate the expected value of the true MSE
 sd(mse)    # This is a measure of its variability (but an imperfect measure)
