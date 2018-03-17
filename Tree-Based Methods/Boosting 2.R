@@ -48,23 +48,13 @@ bm <- ada(formula=RainTomorrow ~ .,data=weather[train,],iter=50,bag.frac=0.5,
 bm30 <- ada(formula=RainTomorrow ~ .,data=weather[train,],iter=50,bag.frac=0.5,
             control=rpart.control(maxdepth=30,cp=0.01,minsplit=20,xval=10))
 
-# Find the train and test error rate (% may be helpful, similar to our churn lab)
-#train error rate 
-prtrain <- predict(bm, newdata=weather[train,])
-#table(weather[train,"RainTomorrow"], prtrain,dnn=c("Actual", "Predicted"))
-round(100* table(weather[train,"RainTomorrow"], prtrain,dnn=c("% Actual", "% Predicted"))/length(prtrain),1)
-
-#test error rate 
+# find the test error rate (% may be helpful, similar to our churn lab)
+# test error rate 
 prtest <- predict(bm, newdata=weather[test,])
 #table(weather[test,"RainTomorrow"], prtest,dnn=c("Actual", "Predicted"))
 round(100* table(weather[test,"RainTomorrow"], prtest,dnn=c("% Actual", "% Predicted"))/length(prtest),1)
 
-#train error rate bm30
-prtrain <- predict(bm30, newdata=weather[train,])
-#table(weather[train,"RainTomorrow"], prtrain,dnn=c("Actual", "Predicted"))
-round(100* table(weather[train,"RainTomorrow"], prtrain,dnn=c("% Actual", "% Predicted"))/length(prtrain),1)
-
-#test error rate bm30
+# test error rate bm30
 prtest <- predict(bm30, newdata=weather[test,])
 #table(weather[test,"RainTomorrow"], prtest,dnn=c("Actual", "Predicted"))
 round(100* table(weather[test,"RainTomorrow"], prtest,dnn=c("% Actual", "% Predicted"))/length(prtest),1)
