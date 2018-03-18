@@ -106,7 +106,7 @@ for (i in 1:nrow(gbm.data)){
 gbm.data$churn=as.numeric(gbm.data$churn)
 #
 # gbm bernoulli
-gbmmodel<-gbm(churn~.,distribution = 'bernoulli',data=gbm.data[train,],n.trees=50,shrinkage=1,bag.fraction = 0.5)
+gbmmodel<-gbm(churn~.,distribution = 'bernoulli',data=gbm.data[train,],n.trees=50,shrinkage=1,train.fraction=0.5)
 summary(gbmmodel)
 # relative influence of different predictors
 #
