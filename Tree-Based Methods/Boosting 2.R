@@ -60,4 +60,4 @@ prtest <- predict(bm30, newdata=weather[test,])
 round(100* table(weather[test,"RainTomorrow"], prtest,dnn=c("% Actual", "% Predicted"))/length(prtest),1)
 
 
-#Notice that we have better training error with max depth 30, but worse test. 
+# Notice that we have better training error with max depth 30, but worse test. 
