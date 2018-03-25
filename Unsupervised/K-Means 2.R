@@ -1,5 +1,4 @@
 #In this exercise, we will see how K-means clustering works with real data 
-#
 #Iris dataset contains data about sepal length and width, petal length and width, 
 #and species of flowers.
 rm(list=ls())
