@@ -24,7 +24,7 @@ set.seed(5072)
 ####### Parameters           ##############################
 ###########################################################
 max.sample.size <- 1000          # sample size
-smoothing.reps <- 20            # number of iterations
+smoothing.reps <- 20             # number of iterations
 polynomial.degree <- 15
 drop.first <- 100
 ############################################################# 
