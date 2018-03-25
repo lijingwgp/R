@@ -14,6 +14,7 @@ plot(x)
 #nstart =20 means R will try 20 different random starting assignments 
 #and then select the one with the lowest within cluster variation 
 km.out = kmeans(x,2,nstart=20)
+km.out
 km.out$cluster
 plot(x, col =(km.out$cluster+1), main = "K-Means Clustering Results with K=2", pch=20, cex=2)
 points(km.out$centers, col=2:3, pch=16, cex=3)
@@ -26,6 +27,7 @@ points(km.out$centers, col=2:3, pch=16, cex=3)
 set.seed(4)
 km.out = kmeans(x,3,nstart=20)
 km.out
+km.out$cluster
 plot(x, col =(km.out$cluster+1), main = "K-Means Clustering Results with K=3", pch=20, cex=2)
 points(km.out$centers, col=2:4, pch=16, cex=3)
 #It is up to your analysis to decide what number of cluster is more appropriate for the data 
