@@ -43,4 +43,4 @@ km.out$tot.withinss
 
 km.out = kmeans(x,3,nstart=50)
 km.out$tot.withinss
-#It is strongly recommend always running with a large nstart like 20 or 50 to avoid an undesirable local optimum 
+#It is strongly recommended always running with a large nstart like 20 or 50 to avoid an undesirable local optimum 
