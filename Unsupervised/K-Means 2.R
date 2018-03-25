@@ -26,12 +26,9 @@ table(irisCluster$cluster, iris$Species)
 
 #As we can see, setosa species data got grouped into cluster 1 perfectly
 #k-means worngly classified 4 versicolor data points and 2 virginica data points 
-irisCluster$cluster <- as.factor(irisCluster$cluster)
-plot(iris$Petal.Length,iris$Petal.Width,col=irisCluster$cluster,main="K-means K=3")
-
-
 #Compare two plots side by side
 par(mfrow=c(1,2))
+irisCluster$cluster <- as.factor(irisCluster$cluster)
 plot(iris$Petal.Length,iris$Petal.Width, col=iris$Species,main="Original Data")
-plot(iris$Petal.Length,iris$Petal.Width,col=irisCluster$cluster,main="K-means K=3")
+plot(iris$Petal.Length,iris$Petal.Width, col=irisCluster$cluster,main="K-means K=3")
 par(mfrow=c(1,1))
