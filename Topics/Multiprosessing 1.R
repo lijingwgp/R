@@ -2,7 +2,6 @@ rm(list=ls())
 ##########################################################################################
 ### Functions
 ##########################################################################################
-
 installIfAbsentAndLoad  <-  function(neededVector) {
   if(length(neededVector) > 0) {
     for(thispackage in neededVector) {
@@ -16,7 +15,6 @@ installIfAbsentAndLoad  <-  function(neededVector) {
 ##############################
 ### Load required packages ###
 ##############################
-
 needed <- c('caret', 'doParallel', 'snow', 'e1071', 'kernlab')      
 installIfAbsentAndLoad(needed)
 set.seed(5082)
@@ -47,7 +45,6 @@ svmTuneGrid
 ############################################## 
 # Case 1: No parallel processing
 ############################################## 
-#
 # The Case 1 code has been commented out to save time. The
 # timing information for this case was as follows:
 # 
@@ -80,7 +77,6 @@ svmTuneGrid
 ############################################## 
 # Case 2: With parallel processing
 ############################################## 
-
 # Enable Parallel Processing
 registerDoParallel(cores=detectCores())
 
