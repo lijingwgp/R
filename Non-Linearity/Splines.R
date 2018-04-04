@@ -1,4 +1,4 @@
-# In order to ﬁt regression splines in R, we use thesplines library
+# In order to ﬁt regression splines in R, we use the splines library
 # Regression splines can be ﬁt by constructing an appropriate matrix of basis functions
 # The bs() function generates the entire matrix of basis functions for splines with the 
 # speciﬁed set of knots
