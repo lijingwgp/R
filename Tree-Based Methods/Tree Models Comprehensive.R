@@ -305,34 +305,36 @@ print(paste("The lowest test error rate is",min(err.trees),"and it occured when 
 
 ## determine the best cutoff point and expected cost per customer
 step.size <- seq(0,1,by=0.01)
-folds <- 3
+folds <- 5
 fold.indices <- cut(1:nrow(churn), breaks = folds, labels = FALSE)
 results3 = c()
-for(i in 1:length(step.size)){
+for(i in 1:folds){
   TP <- c()
   TN <- c()
   FP <- c()
   FN <- c()
   Overall <- c()
-  for(j in 1:folds){
-    test.indices <- which(fold.indices == j)
-    test.data <- churn[test.indices,]
-    train.data <- churn[-test.indices,]
-    best.boost <- ada(train.data$Churn ~ .,data=train.data,iter=besttrees,bag.frac=bestbag,nu=bestlearning,
-                      control=rpart.control(maxdepth=bestdepth,cp=min.cp,minsplit=bestsplit,minbucket=bestbucket,xval=3))
-    preds <- predict(best.boost, newdata = test.data, type = "prob")
+  test.indices <- which(fold.indices == i)
+  test.data <- churn[test.indices,]
+  train.data <- churn[-test.indices,]
+  best.boost <- ada(train.data$Churn ~ .,data=train.data,iter=besttrees,bag.frac=bestbag,nu=bestlearning,
+                    control=rpart.control(maxdepth=bestdepth,cp=min.cp,minsplit=bestsplit,minbucket=bestbucket,xval=3))
+  preds <- predict(best.boost, newdata = test.data, type = "prob")
+  for(j in 1:length(step.size)){
     preds.vec <- rep("No", nrow(preds))
-    preds.vec[preds[,2] >= step.size[i]] <- 'Yes'
+    preds.vec[preds[,2] >= step.size[j]] <- 'Yes'
     table.combination <- table(factor(test.data$Churn, levels=c("No", "Yes")), factor(preds.vec, levels=c("No", "Yes")))
-    Overall[j] <- (table.combination[1,2] + table.combination[2,1])/sum(table.combination)
-    TP[j] <- table.combination[2,2]/sum(table.combination[2,])
-    TN[j] <- table.combination[1,1]/sum(table.combination[1,])
-    FP[j] <- table.combination[1,2]/sum(table.combination[1,])
-    FN[j] <- table.combination[2,1]/sum(table.combination[2,])
+    Overall <- (table.combination[1,2] + table.combination[2,1])/sum(table.combination)
+    TP <- table.combination[2,2]/sum(table.combination[2,])
+    TN <- table.combination[1,1]/sum(table.combination[1,])
+    FP <- table.combination[1,2]/sum(table.combination[1,])
+    FN <- table.combination[2,1]/sum(table.combination[2,])
+    temp <- c(step.size[j],TP,TN,FP,FN,Overall)
+    results3 <- rbind(results3,temp)
   }
-  temp <- c(step.size[i],mean(TP),mean(TN),mean(FP),mean(FN),mean(Overall))
-  results3 <- rbind(results3,temp)
 }
+results3 <- aggregate(results3, by=list(results3[,1]), FUN=mean)
+results3 <- results3[,c(2:7)]
 results3 <- cbind(results3, rep(0,nrow(results3)))
 colnames(results3) <- c("Cutoff","TP","TN","FP","FN","Overall Error Rate","Expected Cost")
 for (i in 1:nrow(results3)){
