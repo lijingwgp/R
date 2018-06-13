@@ -85,6 +85,7 @@ grid.table(head(NIV$Summary),
 ## chance of Y=1 following a treatment.
 
 
+
 ## Combining IV Analysis with Variable Clustering
 ## Variable clustering divides a set of numeric variables into mutually exclusive clusters
 ## The algorithm attempts to generate clusters such that 
