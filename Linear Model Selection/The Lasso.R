@@ -43,3 +43,8 @@ out=glmnet(x,y,alpha=1,lambda=bestlam)
 lasso.coef=predict(out,type="coefficients",s=bestlam)[1:20,]
 lasso.coef
 lasso.coef[lasso.coef!=0]
+
+# A quick way to save Lasso coefficients to a data frame
+tmp_coeffs <- coef(lasso.cv, s = "lambda.min")
+tmp_coeffs_names <- data.frame(name = tmp_coeffs@Dimnames[[1]][tmp_coeffs@i + 1], coefficient = tmp_coeffs@x)
+
