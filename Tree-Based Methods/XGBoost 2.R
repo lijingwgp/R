@@ -79,3 +79,10 @@ model$finalModel
 predictions <- predict(model, testing)
 confusion <- confusionMatrix(predictions, testing$Class)
 
+# scatter plot of the AUC against max_depth and eta
+ggplot(xgb_train_1$results, aes(x = as.factor(eta), y = max_depth, size = ROC, color = ROC)) + 
+  geom_point() + 
+  theme_bw() + 
+  scale_size_continuous(guide = "none")
+
+
