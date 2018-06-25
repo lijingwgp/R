@@ -78,7 +78,7 @@ parameterGrid <- expand.grid(eta = 0.1,
                              subsample = .6)
 parameterGrid
 
-# 5-fold cross-validation and model tuning
+# 10-fold cross-validation and model tuning
 model <- caret::train(Class ~., data = training,
   #x = as.matrix(traindf %>% select(-Class)),
   #y = as.factor(traindf$Class),
