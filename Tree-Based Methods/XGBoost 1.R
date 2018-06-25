@@ -170,9 +170,9 @@ model_tuned <- xgboost(data = dtrain,
 
 
 
-########################
-### Tuning our model ###
-########################
+###########################
+### Examining our model ###
+###########################
 # One way that we can examine our model is by looking at a representation 
 # of the combination of all the decision trees in our model
 #
