@@ -32,6 +32,22 @@ controlParam <- trainControl(
   ## repeated ten times
   repeats = 10,
   allowParallel = T)
+# trainControl() arguments
+#   method: "boot","optimism_boot","boot_all","cv","repeatedcv","LOOCV","oob","adaptive_cv","adaptive_boot"
+#   number: the number of folds or number of resampling iterations
+#   repeats: for repeated k-fold cv only
+#   p: for leave group out cv only, the training percentage
+#   search: either "grid" or "random", describing how the tuning parameter grid is determined
+#   verboselter: a logical for printing a training log
+#   returnData: a logical for saving the data
+#   returnResamp: indicates how much of the resampled summary metrics should be saved. "final", "all", "none"
+#   savePredictions: an indicator of how much the hold-out predictions for each resample should be saved. "final", "all", "none"
+#   classProbs: a logical; should class probabilities be computed for classfication models in each resample?
+#   summaryFunction: a function to compute performance metrics across resamples
+#   selectionFunction: the function used to select the optimal tuning parameter. For regression models, values of "RMSE" and "Rsquared" are applicable. 
+#                      Classification models use either "Accuracy" or "Kappa" (for unbalanced class distributions)
+#   preProcOptions: a list of options to pass to preProcess, "center", "scaling" is passed in via the preProc in train
+#   sampling: a single character value describing  the type of additional sampling that is conducted after resampling. "none", "down", "up", "smote", "rose"
 
 # xgboost model parameters
 #   nrounds: number of iterations
