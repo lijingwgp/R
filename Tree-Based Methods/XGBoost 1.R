@@ -126,14 +126,32 @@ err <- mean((as.numeric(pred) > .5) != test_y)
 ########################
 ### Tuning our model ###
 ########################
+# fit the model with the arbitrary parameters
 model_tuned <- xgboost(data = dtrain,
                        max.depth = 3,
                        nrounds = 2,
-                       objective = "binary:logistic")
+                       eta = 0.1,
+                       objective = "binary:logistic",
+                       eval_metric = "auc")
 pred <- predict(model_tuned, dtest)
 err <- mean(as.numeric(pred > 0.5) != test_y)
-# because we weren't over-fitting to begin with--we don't really see a big change
+# OR
+xgb_params <- list(
+  objective = "binary:logistic",                                               # binary classification
+  eta = 0.01,                                                                  # learning rate
+  max.depth = 3,                                                               # max tree depth
+  eval_metric = "auc"                                                          # evaluation/loss metric
+)
+xgb_1 = xgboost(data = train_x,
+                label = train_y,
+                params = xgb_params_1,
+                nrounds = 100,                                                 # max number of trees to build
+                verbose = TRUE,                                         
+                print.every.n = 1,
+                early.stop.round = 10                                          # stop if no improvement within 10 trees
+)
 
+# because we weren't over-fitting to begin with--we don't really see a big change
 # there are two things we can try to see if we improve our model performance
 #   account for the fact that we have imbalanced classes
 #   train for more rounds
@@ -167,6 +185,20 @@ model_tuned <- xgboost(data = dtrain,
                        scale_pos_weight = negative_cases/positive_cases,
                        # regularization term
                        gamma = 1) 
+
+# cross-validate xgboost to get the accurate measure of error
+xgb_cv_1 = xgb.cv(params = xgb_params,
+                  data = train_x,
+                  label = train_y,
+                  nrounds = 100, 
+                  nfold = 5,                                                   # number of folds in K-fold
+                  prediction = TRUE,                                           # return the prediction using the final model 
+                  showsd = TRUE,                                               # standard deviation of loss across folds
+                  stratified = TRUE,                                           # sample is unbalanced; use stratified sampling
+                  verbose = TRUE,
+                  print.every.n = 1, 
+                  early.stop.round = 10
+)
 
 
 
@@ -202,4 +234,13 @@ odds_to_probs(-0.59953)
 # What if we want a quick way to see which features are most important? We can do that using by creating and then plotting the importance matrix
 importance_matrix <- xgb.importance(names(diseaseinfo_matrix), model = model)
 xgb.plot.importance(importance_matrix)
+
+# plot the AUC for the training and testing samples
+xgb_cv_1$dt %>%
+  select(-contains("std")) %>%
+  mutate(IterationNum = 1:n()) %>%
+  gather(TestOrTrain, AUC, -IterationNum) %>%
+  ggplot(aes(x = IterationNum, y = AUC, group = TestOrTrain, color = TestOrTrain)) + 
+  geom_line() + 
+  theme_bw()
 
