@@ -6,11 +6,9 @@
 # observations are shown from left to right
 
 
-
 #################################
 ### Exploring raw time series ###
 #################################
-
 # The most common first step when conducting time series analysis is to 
 # display your time series dataset in a visually intuitive format.
 #
