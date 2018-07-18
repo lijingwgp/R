@@ -1,5 +1,5 @@
 ########################
-### time series data ###
+### Time Series Data ###
 ########################
 require(astsa)
 plot(jj, main = "Johnson & Johnson Quarterly Earnings per Share", type = "c")
