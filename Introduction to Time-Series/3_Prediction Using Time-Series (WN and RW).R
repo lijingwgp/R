@@ -120,7 +120,7 @@ arima(random_walk, order = c(0,1,0))
 #
 # Weak Stationarity mean, variance, covariance constant over time
 
-# Are the WN or the RW model or the RW model stationary?
+# Are the WN or the RW model stationary?
 # The white noise (WN) and random walk (RW) models are very closely related
 # However, only the RW is always non-stationary, both with and without a drift term
 #
