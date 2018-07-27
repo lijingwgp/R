@@ -46,7 +46,7 @@ plot(Nile, xlab = "Year", ylab = "River Volume (1e9 m^{3})",
 # temp measurement recorded every time you check your email
 #
 # Sampling frequency: missing values
-# Time series data is evely spaced, but with missing values
+# Time series data is evenly spaced, but with missing values
 # temp measurement recorded while you are awake
 
 # Basic Assumptions:
