@@ -102,9 +102,13 @@ ts.plot(rw_drift_diff)
 rw_diff <- diff(random_walk)
 model_wn <- arima(rw_diff, order= c(0,0,0))
 int_wn <- model_wn$coef
-
 ts.plot(random_walk)
 abline(0, int_wn)
+
+# Or, we could just directly estimate the RW model by using the arima() function 
+# with order = c(0,1,0)
+
+arima(random_walk, order = c(0,1,0))
 
 # Stationary Processes
 #   stationary models are parsimonious
