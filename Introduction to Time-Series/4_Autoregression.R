@@ -23,16 +23,18 @@
 # the model argument equal to list(ar = phi), in which phi is a slope parameter from the 
 # interval (-1,1). We also need to specify a series lenght n
 
+a <- arima.sim(model = list(ar = 0.1), n = 100)
 x <- arima.sim(model = list(ar = 0.5), n = 100)
 y <- arima.sim(model = list(ar = 0.9), n = 100)
 z <- arima.sim(model = list(ar = -0.75), n = 100)
-plot.ts(cbind(x, y, z))
+plot.ts(cbind(a, x, y, z))
 
 # Estimate the autocorrelation function (ACF) for an autoregression
 # acf() function allow us to estimate the autocorrelation function by exploring lays in the data
 # By default, this function generates a plot of the relationship between the current observation
 # and the lags extending backwards
 
+acf(a)
 acf(x)
 acf(y)
 acf(z)
