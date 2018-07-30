@@ -2,6 +2,8 @@
 ### Time Series Data ###
 ########################
 require(astsa)
+require(xts)
+
 plot(jj, main = "Johnson & Johnson Quarterly Earnings per Share", type = "c")
 text(jj, labels = 1:4, col = 1:4)
 
@@ -10,7 +12,6 @@ text(jj, labels = 1:4, col = 1:4)
 # 2nd and 3rd quarters are usually up, and the 4th quarters are usually down
 
 plot(globtemp, main = "Global Temperature Deviations", type = "o")
-require(xts)
 
 # noise
 plot(sp500w, main = "S&P 500 Weekly Returns")
