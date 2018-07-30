@@ -81,8 +81,8 @@ sarima(chicken,2,1,0,1,0,0,12)
 # The data are monthly live births (adjusted) in thousands for the United States, 
 # 1948-1979, and includes the baby boom after WWII.
 # Plot P/ACF to lag 60 of differenced data
-d_birth <- diff(birth)
 plot(birth)
+d_birth <- diff(birth)
 plot(d_birth)
 acf2(d_birth, max.lag = 60)
 # Use another call to diff() to take the seasonal difference of the data. 
