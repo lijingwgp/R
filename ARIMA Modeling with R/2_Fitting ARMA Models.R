@@ -59,7 +59,7 @@ sarima(x, 2, 0, 0)
 x <- arima.sim(model = list(order = c(0,0,1), ma = -.8), n = 100)
 plot(x)
 acf2(x)
-sarima(x,0,0,1)
+sarima(x, 0, 0, 1)
 
 
 ##########################
@@ -95,7 +95,7 @@ dl_varve <- diff(log(varve))
 plot(dl_varve)
 sarima(dl_varve, 0, 0, 1)
 sarima(dl_varve, 0, 0, 2)
-sarima(dl_varve, 1,0,1)
+sarima(dl_varve, 1, 0, 1)
 
 plot(oil)
 plot(diff(log(oil)))
