@@ -70,7 +70,7 @@ predict(MA_inflation_changes, n.ahead = 6)
 # today - mean = slope * (yesterday - mean) + noise
 #
 # MA model
-# today = mean + noise + slope * yesterday's noise
+# today = mean + today's noise + slope * yesterday's noise
 #
 # Where noise are centered around 0 and has variance of sigma^2
 # AR has autocorrelation at many lags, MA has autocorrelation at one lag
