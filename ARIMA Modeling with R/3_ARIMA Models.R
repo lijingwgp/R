@@ -130,3 +130,4 @@ lines(full)
 sarima(globtemp, 0,1,2)
 # Forecast data 35 years into the future
 sarima.for(globtemp, n.ahead = 35, 0,1,2)
+
