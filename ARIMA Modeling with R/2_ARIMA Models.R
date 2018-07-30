@@ -100,7 +100,7 @@ sarima(globtemp, 1,1,1)
 ### Forecasting ARIMA ###
 #########################
 # Forecasting ARIMA Processes
-#   the model describes how the dynamics of the itme series behave over time
+#   the model describes how the dynamics of the time series behave over time
 #   forecasting simply continues the model dynamics into the future
 #   use sarima.for() to forecast
 
@@ -116,6 +116,7 @@ full <- arima.sim(model = list(order = c(1,1,0), ar = .9), n = 120)
 plot(full)
 plot(diff(full))
 x <- window(full, end = 100)
+plot(x)
 # Plot P/ACF pair of differenced data 
 acf2(diff(x))
 # Fit model - check t-table and diagnostics
