@@ -2,7 +2,7 @@
 ### The Simple Moving Average Model ###
 #######################################
 # The weighted sum of current and previous noise is called a simple moving average process
-#   today = mean + noise + slope(yesterday's noise)
+#   today = mean + today's noise + slope(yesterday's noise)
 # 
 # If slope is 0, then the MA is simply a WN process
 # If slope is not 0, then the MA model depends on both current and previous noise
