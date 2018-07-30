@@ -21,6 +21,8 @@
 # actually observed. Like the autoregressive (AR) model, the MA model includes the 
 # white noise (WN) model as special case
 
+# Generate MA model with slope 0.1
+x <- arima.sim(model = list(ma = 0.1), n = 100)
 # Generate MA model with slope 0.5
 x <- arima.sim(model = list(ma = 0.5), n = 100)
 # Generate MA model with slope 0.9
@@ -28,13 +30,14 @@ y <- arima.sim(model = list(ma = 0.9), n = 100)
 # Generate MA model with slope -0.5
 z <- arima.sim(model = list(ma = -.5), n = 100)
 # Plot all three models together
-plot.ts(cbind(x, y, z))
+plot.ts(cbind(a, x, y, z))
 
 # Note that there is some very short-run persistence for the positive slope values 
 # (x and y), and the series has a tendency to alternate when the slope value 
 # is negative (z)
 
 # Estimate the autocorrelation function (ACF) for a MA model
+acf(a)
 acf(x)
 acf(y)
 acf(z)
