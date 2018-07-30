@@ -29,11 +29,6 @@ x <- arima.sim(list(order = c(1,1,0), ar=.9), n=200)
 plot(x, main="ARIMA(1,1,0)")
 plot(diff(x), main="ARMA(1,0,0)")
 acf2(x)
-
-x <- arima.sim(model = list(order = c(1, 1, 0), ar = .9), n = 200)
-plot(x)
-acf2(x)
-plot(diff(x))
 acf2(diff(x))
 
 # as we observe, differencing the data in ARIMA(1,1,0) model makes it stationary and allows
