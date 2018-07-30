@@ -108,5 +108,5 @@ sarima(birth,1,1,1,0,1,1,12)
 # Fit your previous model to unemp and check the diagnostics
 sarima(unemp, 2,1,0,0,1,1,12)
 # Forecast the data 3 years into the future
-sarima.for(unemp,2,1,0,0,1,1,12,n.ahead = 36)
+sarima.for(unemp,2,1,0,0,1,1,12, n.ahead = 36)
 
