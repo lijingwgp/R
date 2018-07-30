@@ -100,7 +100,7 @@ sarima(globtemp, 1,1,1)
 ### Forecasting ARIMA ###
 #########################
 # Forecasting ARIMA Processes
-#   the model describes how the hynamics of the itme series behave over time
+#   the model describes how the dynamics of the itme series behave over time
 #   forecasting simply continues the model dynamics into the future
 #   use sarima.for() to forecast
 
