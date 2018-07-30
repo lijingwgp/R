@@ -55,7 +55,7 @@ x <- arima.sim(model = list(ar = 0.9), n = 200)
 ts.plot(x)
 acf(x)
 # Simulate and plot AR model with slope 0.98
-y <- arima.sim(model = list(ar = 0.98), n = 200)
+y <- arima.sim(model = list(ar = 0.95), n = 200)
 ts.plot(y)
 acf(y)
 # Simulate and plot RW model
