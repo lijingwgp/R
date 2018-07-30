@@ -48,9 +48,9 @@ sarima(x.2, 1,1,1,1,1,0,12)
 # Now, fit a seasonal ARIMA model to the monthly unemployment data
 # First, plot the data and notice the trend and the seasonal persistence
 plot(unemp)
-# Then look at the detrended data and remove the seasonal persistence. 
 unemp.d <- diff(unemp)
 plot(unemp.d)
+# Then look at the detrended data and remove the seasonal persistence. 
 unemp.d.d <- diff(unemp.d, lag = 12)
 # After that, the fully differenced data should look stationary.
 plot(unemp.d.d)
