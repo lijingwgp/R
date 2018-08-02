@@ -1,0 +1,9 @@
+list1 = lapply(1:4,function(i) function(x) return(x^i)) 
+list1[[4]](2)
+
+list2 = list(NULL)
+for(i in 1:4){
+  list2[[i]] = eval(parse(text=paste0('function(x){x^',i,'}')))
+  
+}
+list2[[3]](4)
