@@ -7,14 +7,14 @@
 # Mean centered version of the AR model:
 #   (today - mean) = slope * (yesterday - mean) + noise
 #
+# Autocorrelation means correlation with the past
+# The magnitude of autocorrelation is determined by the slope
+#
 # If slope = 0, then today = mean + noise
 # If slope != 0, then today depends on both yesterday and noise
 #
 # large values of slope lead to greater autocorrelation
 # Negative values of slope result in oscillatory time series
-#
-# Autocorrelation means correlation with the past
-# The magnitude of autocorrelation is determined by the slope
 # 
 # When mean = 0, and slope = 1 then the AR model become the RW model
 # Thus the AR model includes both the WN and RW model as special cases
