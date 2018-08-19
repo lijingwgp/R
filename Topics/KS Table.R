@@ -1,13 +1,15 @@
 ## Making KS Table and Finding cutoff
 options(scipen = 999)
-table1 <- quantile('predictions', probs = seq(0,1,0.01))
+cutpoints <- quantile(Grid_prediction2[,xgbcv_final.pred], probs=seq(0,1,0.01), names=F)
+
+table1 <- quantile(Grid_prediction2[,xgbcv_final.pred],probs = seq(0,1,0.01))
 table2 <- as.data.frame(table1)
 table3 <- as.data.frame(table2[rev(rownames(table2)),])
 table4 <- as.data.frame(table3[2:nrow(table3),])
 table4$Low <- seq(from = (1-0.01), to = 0, by = -0.01)
 table4$High <- seq(from = 1, to = 0.01, by = -0.01)
 names(table4)[1] <- 'Value'
-obs_in_interval <- Grid_prediction2['predictions' >= table4[1,'Value'],]
+obs_in_interval <- Grid_prediction2[Grid_prediction2[,xgbcv_final.pred] >= table4[1,'Value'],]
 outputTable <- table4
 outputTable$Cumulative_1_Captured <- NULL
 outputTable$Cumulative_0_Captured <- NULL
