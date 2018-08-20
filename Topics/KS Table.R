@@ -1,6 +1,5 @@
 ## Making KS Table and Finding cutoff
 options(scipen = 999)
-cutpoints <- quantile(Grid_prediction2[,xgbcv_final.pred], probs=seq(0,1,0.01), names=F)
 table1 <- quantile(Grid_prediction2[,xgbcv_final.pred],probs = seq(0,1,0.01))
 table2 <- as.data.frame(table1)
 table3 <- as.data.frame(table2[rev(rownames(table2)),])
