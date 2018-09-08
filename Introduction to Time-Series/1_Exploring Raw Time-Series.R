@@ -64,8 +64,10 @@ plot(Nile, xlab = "Year", ylab = "River Volume (1e9 m^{3})",
 start(AirPassengers)
 end(AirPassengers)
 time(AirPassengers)
-deltat(AirPassengers)
 frequency(AirPassengers)
+
+deltat(AirPassengers)
+time(AirPassengers)
 cycle(AirPassengers)
 
 # Sometimes it is useful to know the missing values locations, since we may want to impute 
