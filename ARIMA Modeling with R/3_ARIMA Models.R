@@ -71,10 +71,10 @@ sarima(globtemp, 0,1,2)
 
 x <- arima.sim(model = list(order = c(0,1,1), ma = .9), n = 250)
 plot(x)
-plot(diff(x))
 # Plot sample P/ACF pair of the differenced data
 # Note that the model is easily identified
-acf2(x)
+plot(diff(x))
+acf2(diff(x))
 # Fit an ARIMA(0,1,1) model to the simulated data using sarima(). 
 # Compare the MA parameter estimate to the actual value of .9, and examine 
 # the residual plots.
