@@ -4,8 +4,8 @@
 # in this section, we focus on fit ARMA model to stationary time series data
 # the first problem is how to identify ARMA model from data
 
-x <- arima.sim(list(order = c(1,0,0), ar = -.7), n = 200)
-y <- arima.sim(list(order = c(0,0,1), ma = -.7), n = 200)
+x <- arima.sim(list(order = c(1,0,0), ar = .99), n = 200)
+y <- arima.sim(list(order = c(0,0,1), ma = .99), n = 200)
 
 par(mfrow = c(2,1))
 plot(x, main = "AR(1)")
