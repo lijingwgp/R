@@ -3,7 +3,7 @@
 # the partial autocorrelation function can be interpreted as a regression of the series against 
 # its past lags. it helps you come up with a possible order of the auto regressive term
 #
-# as a rule of thumb, you use the acf for vonfirming trend and inferring possible values of the
+# as a rule of thumb, you use the acf for confirming trend and inferring possible values of the
 # moving average parameters, and the pacf for the auto regressive part
 
 # another way to explain pacf
