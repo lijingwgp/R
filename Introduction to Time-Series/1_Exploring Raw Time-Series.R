@@ -63,9 +63,9 @@ plot(Nile, xlab = "Year", ylab = "River Volume (1e9 m^{3})",
 
 start(AirPassengers)
 end(AirPassengers)
-cycle(AirPassengers)
-frequency(AirPassengers)
 
+frequency(AirPassengers)
+cycle(AirPassengers)
 deltat(AirPassengers)
 time(AirPassengers)
 
