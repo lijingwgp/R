@@ -7,7 +7,7 @@
 x <- arima.sim(list(order = c(1,0,0), ar = -.7), n = 200)
 y <- arima.sim(list(order = c(0,0,1), ma = -.7), n = 200)
 
-par(mfrow = c(1,2))
+par(mfrow = c(2,1))
 plot(x, main = "AR(1)")
 plot(y, main = "MA(1)")
 
