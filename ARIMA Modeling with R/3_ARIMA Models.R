@@ -114,10 +114,10 @@ lines(oil.real)
 # The data are in y and the first 100 observations are in x.
 full <- arima.sim(model = list(order = c(1,1,0), ar = .9), n = 120)
 plot(full)
-plot(diff(full))
 x <- window(full, end = 100)
 plot(x)
 # Plot P/ACF pair of differenced data 
+plot(diff(x))
 acf2(diff(x))
 # Fit model - check t-table and diagnostics
 # Use sarima() to fit an ARIMA(1,1,0) to the data
@@ -130,4 +130,3 @@ lines(full)
 sarima(globtemp, 0,1,2)
 # Forecast data 35 years into the future
 sarima.for(globtemp, n.ahead = 35, 0,1,2)
-
