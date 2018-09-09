@@ -30,7 +30,7 @@ z <- arima.sim(model = list(ar = -0.75), n = 100)
 plot.ts(cbind(a, x, y, z))
 
 # Estimate the autocorrelation function (ACF) for an autoregression
-# acf() function allow us to estimate the autocorrelation function by exploring lays in the data
+# acf() function allow us to estimate the autocorrelation function by exploring lags in the data
 # By default, this function generates a plot of the relationship between the current observation
 # and the lags extending backwards
 
