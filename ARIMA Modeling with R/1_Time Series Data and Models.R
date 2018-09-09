@@ -38,7 +38,7 @@ plot(soi)
 ### Stationarity and Nonstationarity ###
 ########################################
 # a time series is stationary when it is "stable", meaning:
-#   the mean is constand (no trend)
+#   the mean is constant (no trend)
 #   the correlation structure remains constant over time
 
 # stationarity is important because given data, we can estimate by averaging
