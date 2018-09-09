@@ -1,9 +1,9 @@
 #############################################################
 ### Correlation analysis and the autocorrelation function ###
 #############################################################
-# ts.plot(cbind(stock_A, stock_B)) allows us to compare two time series objects
-# plot(stock_A, stock_B) allows us to examine correlation between the two stocks
 # plot(a, b) function will produce a scatterplot when two time series names a and b are given as input
+# plot(stock_A, stock_B) allows us to examine correlation between the two stocks
+# ts.plot(cbind(stock_A, stock_B)) allows us to compare two time series objects
 
 plot(EuStockMarkets)
 # Use this code to convert prices to returns
