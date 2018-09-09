@@ -31,7 +31,7 @@ apply(eu_percentreturns, MARGIN = 2, FUN = qqnorm, main = "")
 qqline(eu_percentreturns)
 
 # Make a scatterplot of DAX and FTSE
-plot(DAX, FTSE)
+plot(EuStockMarkets[,1], EuStockMarkets[,4])
 # Make a scatterplot matrix of eu_stocks
 pairs(EuStockMarkets)
 # Convert eu_stocks to log returns
