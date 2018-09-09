@@ -24,13 +24,13 @@
 # Generate MA model with slope 0.1
 x <- arima.sim(model = list(ma = 0.1), n = 100)
 # Generate MA model with slope 0.5
-x <- arima.sim(model = list(ma = 0.5), n = 100)
+y <- arima.sim(model = list(ma = 0.5), n = 100)
 # Generate MA model with slope 0.9
-y <- arima.sim(model = list(ma = 0.9), n = 100)
+z <- arima.sim(model = list(ma = 0.9), n = 100)
 # Generate MA model with slope -0.5
-z <- arima.sim(model = list(ma = -.5), n = 100)
+k <- arima.sim(model = list(ma = -.5), n = 100)
 # Plot all three models together
-plot.ts(cbind(a, x, y, z))
+plot.ts(cbind(x, y, z, k))
 
 # Note that there is some very short-run persistence for the positive slope values 
 # (x and y), and the series has a tendency to alternate when the slope value 
