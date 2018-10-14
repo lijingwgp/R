@@ -44,10 +44,10 @@ frequency(gold)
 #
 # A seasonal plot is similar to a time plot except that the data are plotted 
 # against the individual "seasons" in which the data were observed.
-# You can create one using the ggseasonplot() function the same way you do with autoplot().
+#   You can create one using the ggseasonplot() function the same way you do with autoplot().
 #
-# A subseries plot comprises mini time plots for each season. Here, the mean for each 
-# season is shown as a blue horizontal line.
+#   A ggsubseries plot comprises mini time plots for each season. Here, the mean for each 
+#   season is shown as a blue horizontal line.
 
 # One way of splitting a time series is by using the window() function, 
 # which extracts a subset from the object x observed between the times start 
