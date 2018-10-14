@@ -110,14 +110,9 @@ ggAcf(oil)
 # Produce a time plot and ACF plot of sunspot.year
 autoplot(sunspot.year)
 ggAcf(sunspot.year)
-# By observing the ACF plot, at which lag value (x) can you find the maximum 
-# autocorrelation (y)? Set this equal to maxlag_sunspot.
-maxlag_sunspot <- 1
 # Plot the traffic on the Hyndsight blog
 autoplot(hyndsight)
 ggAcf(hyndsight)
-# Save the lag corresponding to maximum autocorrelation
-maxlag_hyndsight <- 7
 
 
 
