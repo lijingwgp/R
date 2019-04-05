@@ -37,6 +37,7 @@ summary(pca)
 pca$rotation = -pca$rotation
 pca$x = -pca$x
 autoplot(pca, data = bank,loadings = TRUE,loadings.label = TRUE, loadings.label.size = 3.5, loadings.colour = 'blue')
+
 print("The first loading vector puts equally more weights on employment variation rate, Euro interbank offered rate, number of employees. All of these are economic related variables")
 print("The first loading vector puts more negative weights on variable previous which represent number of contacts before this campaign")
 print("This may imply that when predicting whether a client is a term-deposit subsriber, the number of contacts before this campaign could have a opposite effect from all financial metrics")
@@ -55,6 +56,7 @@ print("However, when taking the variable previous into consideration together wi
 print("Variables that represents efforts made by the bank trying to reach out to a client before the current campaign largely explains the variances in the second dimension while putting economic indicators aside")
 print("Given the fact that variable previous and pdays each has a positive and negative effect on classifying a client, we highly suspect that the more contacts made before the current campaign the more positive effect it will have on a client")
 print("Similarly, the more days passed after a client was contacted from last campaign the more negative effect it will have on a client")
+
 pca.var=pca$sdev^2
 pve = pca.var / sum(pca.var)
 plot(pve, xlab="Principal Component", ylab="Proportion of Variance Explained", ylim=c(0,1),type='b')
