@@ -1,0 +1,433 @@
+---
+title: "Randomized Controlled Trial"
+output:
+  word_document: default
+---
+
+
+## 1. Overview
+A/B testing sometimes is also called randomized controlled trial (RCT).
+What separates the RCT from other statistical tools is its ability to define causality. Whereas most statistical techniques can only tell us about correlations, the RCT can tell us about causations, i.e. whether A causes B, or B causes A.
+
+This script will outline the design principles of RCTs and how to ensure that a trial is effective and cost-efficient. 
+
+
+
+## 2. Glossary and Key Terms
+1. Intervention: An intervention is the product or program innovation you are testing in a trial.
+
+2. Co-variate: Variables in a study that might correlate with our outcome.
+
+3. Cluster: A group of indiciduals sharing some co-variates.
+
+4. Randomisation unit: The level at which randomization (and analysis) occurs, this could be the individual, the group, or the site.
+
+5. Outliers: Data points which do not seem to follow the main distribution, note that this is often very subjective.
+
+6. Treatment group: Those individuals or clusters that have been assigned to an intervention.
+
+7. Control group: Those individuals or clusters that have been assigned to not receive an intervention.
+
+8. Minimum detectable effect: A minimum detectable effect (MDE) is the smallest true effect that has a "good chance" of being found to be statistically significant (i.e. with a power of 0.8).
+
+
+
+## 3. Objectives
+After this walkthrough we should:
+1. Know the steps to take when designing an RCT and the order in which to follow. 
+2. Understand what trials are possible given certain resource limitations.
+
+We will break an RCT into parts and examine what is required from each part to make an effective RCT. To turn a vague idea into an RCT we first need to form our question as:
+
+1. a hypothesis, 
+2. we then need to work out our randomization strategy, 
+3. sample size,
+5. p-value threshold for analysis
+4. and finally, our method of measurement.
+
+
+
+## 4. Hypothesis
+We might start thinking about a randomized controlled trial (RCT) based on a question or idea. 
+
+For example, we might have a hunch that an SMS system improves repayment. With a little bit of work we can take this question and turn it into a hypothesis and an RCT that evaluates the exact gain (or lack of gain) that results from the new SMS system.
+
+A hypothesis is a formal statement describing the relationship you want to test. A hypothesis must be a simple, clear and testable statement. We re-phrase our question of "does an SMS system improve repayment" to two statements, a null hypothesis and an alternative hypothesis:
+
+1. Null: There is no difference between treatment and control groups. 
+2. Alternative: There is a difference between treatment and control groups.
+
+Notably, a hypothesis should include reference to the population, the intervention, the comparison group, the outcome and the time (PICOT).
+
+
+
+## 5. Randomization
+### 5.1 Randomization in RCTs
+Once we have a well formed hypothesis we can think about randomization strategies. To extend our example from above, we could randomize our farmers in two ways:
+
+1. Randomly select people to receive a repayment related SMS or not.
+2. Allow people to choose whether to receive reminders.
+
+Our goal here is to distribute co-variates evenly and eliminate bias. However, what would be the difference between these two setups? There are two forms of bias at this stage of RCt design:
+
+1. Randomization bias: due to poor randomization resulting in unbalanced treatment and control groups.
+2. Selection bias: would be caused if we were to allow people to assign themselves to treatment/control choice.
+
+Both of these will lead to what is called confounding bias, this means it will be difficult to untangle effects that are due to poor randomization and effects that are due to the actual intervention.
+
+While there might be logistical or organizational reasons why we can't do the former strategy, random selection is certainly a more statistically robust RCT. It is therefore important to select treatment and control groups totally randomly, the best way to achieve this is by letting R do the work for us. I have included a function below that will do this. 
+
+```{r}
+# lets first make up a fake list of people IDS from 1 to 1000 and 1000 random variables drawn from a normal dist.
+df = data.frame("OAFID"=seq(1,1000), "yield"=rnorm(1000))
+head(df)
+```
+```{r}
+# lets now make a function to do the work
+# it needs to be given a dataframe and a list of naming options
+# Options might be "treatment" and "control"
+
+RCT_random = function(dataframey, values_to_add){
+  set.seed(111)
+  dataframey$values_to_add[sample(1:nrow(dataframey), nrow(dataframey), FALSE)] <- rep(values_to_add)
+  colnames(dataframey)[which(colnames(dataframey)=="values_to_add")] = "Status"
+  return(dataframey) }
+
+# so this will take the dataframe called "df" and randomly assign each ROW to "Treatment" or "control"
+df_new = RCT_random(df, c("Treatment","Control"))
+head(df_new)
+```
+
+We should now double-check our randomization to ensure it has proceeded as expected, to do this we can look at the distributions of the most important key variables. 
+
+```{r}
+library(ggplot2)
+ggplot(df_new, aes(x=yield, fill=Status)) + geom_density(alpha=.3) + xlab("Yield")
+```
+
+### 5.2 Cluster Randomized Trials (Optional)
+Sometimes, we won't be able to randomize at the individual level but we will still want to measure at that level. For example, if we were to randomly assess the impact of bank branch incentives on people's repayment then it would not be possible to randomize at the customer levels and we would instead need to randomize at the branch level whilst still measuring our customer level outcome (repayment).
+
+The process of randomizing at one level but measuring at another causes complications in our RCT design. Specifically, the inherent similarity of customers sharing an branch will lead us to have narrower distributions and under-estimate our errors. This, in turn, will have knock on effects for our study power.
+
+The concept that individuals treated in groups will behave similarly is known as clustering and our solution is to use a cluster randomized trial. 
+
+A cluster randomized trial is similar to an RCT but our unit of randomization becomes the cluster rather than the individual. We can measure clustering with the intra-cluster correlation or ICC which will tell us how correlated the responses of individuals within a cluster are. ICC runs from 0 (no correlation between members of the same cluster) to 1.0 (complete correlation).
+
+```{r}
+# let's first look at how we can calculate ICCs
+df = data.frame(CustID=seq(1,100), Interest=rnorm(100,500,50),  Group_name=c("customer_first","customer_second","customer_third","customer_last"), District=c("A","B"))
+
+library(knitr)
+kable(df[1:5,], format="markdown", align="c")
+```
+
+We can calculate the ICC using the snippet of code below:
+
+```{r}
+# this function will calculate the confidence intervals for ICC
+# it needs two character strings, x and y, which are the group level and the outcome variable column names in
+# it also needs the dataframe which has column names x y
+
+ICC_CI <- function(cluster_level,outcomevar, dataf){
+  #load library
+  require(ICC)
+  set.seed(123)
+  si = round(dim(dataf)[1]*0.66)
+  values_f <- c()
+  for(i in seq(1:50)){
+  samp_f = dataf[sample(nrow(dataf), si), ]
+  x_f = ICCbare(cluster_level,outcomevar,samp_f)
+  values_f <- c(values_f, x_f)
+  }
+  # note that 1.96StDevs = 95% confidence interval bounds in a normal dist.
+   ret = data.frame("Mean ICC" = round(mean(values_f, na.rm=TRUE),3), "CI" = round(1.96*sd(values_f, na.rm=TRUE),3))
+   ret$Significant = ifelse(ret$Mean.ICC > ret$CI, "Y", "N")
+  return( ret)
+}
+
+stored_ICC <- ICC_CI("Group_name", "Interest", df)
+stored_ICC
+```
+
+We can see from this calculation that our ICC between farmers in the same lending group is -0.029 +- 0.054. As the confidence intervals cross zero we can see that this is not significant. We can do a similar calculation for district level ICC:
+
+```{r}
+ICC_CI("District", "Interest", df)
+```
+
+Once we know our ICC (and whether it is significant) we have two options which will effect our RCT planning and analysis.
+
+#### 5.2.1 Option 1: Summarize Data
+Calculate a summary metric for each cluster (e.g. cluster mean). Each cluster then provides only one data point and allows us to continue with the assumption that our data is independent, we can then proceed with standard statistical tools (e.g. T-test) as normal.
+
+So if we have 500 customers in 45 groups, we end up with 45 data points. This means our power, sample size and analysis calculations also need to be carried out at the cluster level. It also means we can simply analyze our data at the cluster level and ignore ICC altogether.
+
+Now, let's see how this will be implemented in R
+
+```{r}
+head(df)
+```
+
+Now let us summarize it by the cluster which is Group_name
+
+```{r}
+library(dplyr) 
+sum_df <- df %>% group_by(Group_name) %>% summarise_each(funs(mean))
+kable(sum_df, format="markdown", align="c")
+```
+
+We now have the average interest yield for each of our four groups ("customer_first", "customer_second", "customer_third", "customer_last"). 
+
+Note that we can also manually manipulate our data if we want to specifically create new metrics and preserve character/factors:
+
+```{r}
+sum_df2 <- df %>%
+  group_by(Group_name) %>%
+  summarize(
+    average_yield= mean(Interest), 
+    stdev_yield= sd(Interest), Districts = unique(District)
+  ) %>% 
+  as.data.frame()
+
+kable(head(sum_df2))
+```
+
+#### 5.2.2 Option 2: Use the ICC
+For option 2, we will continue to calculate power, sample size and analysis metrics at the individual level but with some corrections to account for the falsely narrow distributions.
+
+For our sample size, we will inflate it with the ICC_correction function below:
+
+```{r}
+ICC_correction <- function(samplesize, num_clusters, ICC_estimate){
+
+  average_cluster_size = samplesize/num_clusters
+  
+  factor_inflate = 1 + (average_cluster_size - 1) * ICC_estimate
+  
+  return(data.frame("New sample size"=round(samplesize*factor_inflate), "Old sample size"=samplesize   ))
+}
+
+ICC_correction(200, 50, 0.2)
+```
+
+So an initial sample size of 200 customer, with 30 clusters and an ICC of 0.2 would lead to a new sample size of 320.
+
+Note that adding additional clusters (rather than new customer in existing clusters) is a more efficient way to increase statistical power without massive adjustments to sample size. For example:
+
+```{r}
+scenario1 <- ICC_correction(200,20,0.2)$New.sample.size 
+scenario2 <- ICC_correction(200,40,0.2)$New.sample.size
+scenario1
+scenario2
+```
+
+Here is a simulation that will plot the relationship between adding customers from new clusters vs. existing clusters. 
+
+```{r}
+# starting size is the uncorrected sample size
+# n clusters is total number of clusteres
+# ICCval is calculated ICC
+# add size is the size of new clusters we want to add
+# maxim limits the number of new customer added 
+
+ICC_groups <- function(starting_size, nclusters, ICCval, add_size, maxim){
+  
+  add_c <- c()
+  expand_c <-c()
+  
+  xo = seq(1:maxim)*add_size
+  for(i in seq(1:maxim)) {
+    i=as.numeric(i)
+    starting_size  <- as.numeric(starting_size)
+    nclusters <- as.numeric(nclusters)
+    sizes = starting_size+(i*add_size)
+    clustersplus = nclusters+i
+    add_c[[i]] <- ICC_correction(sizes,nclusters+i,ICCval)$New.sample.size
+    expand_c[[i]] <- ICC_correction(sizes,nclusters,ICCval)$New.sample.size
+  }
+  
+  library(ggplot2)
+print(ggplot() + geom_line(aes(x=xo,y=add_c,colour="Clusters")) + geom_line(aes(x=xo,y=expand_c,colour="Individuals")) + xlab("Added Size")+ scale_colour_manual("", breaks = c("Clusters", "Individuals"),values = c("red", "blue")) + ylab("Corrected sample size") + ggtitle("Sample size inflation") )
+
+  return(list(add_c,expand_c))
+}
+
+y = ICC_groups(200,40,0.1,5, 50)
+```
+
+
+
+## 6. P-value Threshold Setting
+Once we have a testable hypothesis and a randomization strategy, we will use a hypothesis test to detect differences in the underlying populations represented by our control and treatment samples. 
+
+A hypothesis test will yield a P-value, which is the probability that our data could generated purely by chance. In other words, the probability that we wrongly reject H0 (a false positive result).
+
+When using a hypothesis test we must set an acceptable rate of false positives, also known as the p-value threshold or alpha level. The most common p-value threshold is 0.05. This means that we are willing to accept a 5% risk of generating a false positive and wrongly concluding that there is a difference between our treatments when in fact there is not.
+
+In some cases we might want to set a threshold of 0.01 (1%) or 0.1 (10%). Generally speaking, the more unwilling we are to be incorrect, the lower the threshold. So for an intervention that might have adverse effects on customers, we would want to be very sure of the positive effects (0.01 threshold) and unwilling to accept negative effects (0.1 threshold). Note that the lower our threshold the larger the sample size needed to detect any effect.
+
+
+
+## 7. Sample Size Calculation
+Hypothesis framing, randomization process and p-value threshold, are all essential pieces for a robust A/B test. But they are more leaning towards the strategy side of the experiment.
+
+Now, we are left with more field relevant problems to think about, and they are minimum detectable effect, effect size, statistical power, and sample sizes. 
+
+Calculating sample sizes is an essential part of an effective RCT. However, it is not something that we would be immediately able to do. In order to calculate sample sizes, we would need to first determine a minimum detectable effect (effect size). And then later on, after a a sample size is calculated, we would need to assess its statistical power. If the power is not high enough, we would need to re-calcuate a sample size, and as one could imagine, we would need a new effect size.
+
+### 7.1 Using MDE to Calculate Sample Sizes
+Effect size is a simple way to measure the effect of a treatment. It is basically the difference in means between samples divivde by the standard deviation of the samples. So an effect size of 1 means the data has shifted over an amount equal to 1 standard deviation.
+
+There are generally two ways we can derive an effect size estiamte.
+
+1. Using the Cohen's D equation
+2. Set a minimum detectable effect (MDE)
+
+The function below is made to calculate Cohen's D
+
+```{r}
+cohen_d <- function(d1,d2){
+  m1 <- mean(d1, na.rm = TRUE)
+  m2 <- mean(d2, na.rm = TRUE)
+  s1 <- sd(d1, na.rm = TRUE)
+  s2 <- sd(d2, na.rm = TRUE)
+  spo <- sqrt((s1**2+s2**2)/2)
+  d <- (m1-m2) / spo
+  rpb <- d / sqrt((d**2)+4)
+  ret <- list('rpb'=rpb, 'effectsi') = d
+  return(ret)}
+```
+
+But the problem with this approach is that we would need to have two data sets ready in the first place. Since our goal is to determine a sample so that this sample can be further divided into control and test, we will move to the second approach.
+
+The MDE approach will ask "what is the minimum effect that I would need to see for the intervention to be worthwhile?", we would then set the effect size to that. The reasoning here is that if the return on investment (ROI) of a proposed intervention is negative (or very small) then we don't need to be able to precisely measure it to make a decision. 
+
+For example, if we trial the effect of solar lamps on customer expenditure, then it might be that only a reduction of \$5 or greater per month is worthwhile, and anything below \$5 would be a negative investment. In this case, we can use \$5 as our MDE and 5 as our effect size for calculations. 
+
+This then rephrases our effect size and RCT to: "we will have an X% chance of detecting an effect of \$5 dollars or greater" where X is the power with an MDE of \$5.
+
+The MDE approach can be very powerful for product innovations trials where we only care if a product alters the treatment group by a certain magnitude or mode. 
+
+The function below allows us to visualize how sample sizes interact with MDE.
+
+```{r}
+# make some fake data, let's pretend its baseline data
+dat <- data.frame("monthly expenses" = rnorm(1000,100,10))
+head(dat)
+
+# this function will plot MDE for various differences
+# differs is a list of intervention effects that you want to consider
+plot_MDE <- function(historical_data, differs){
+  p <- c() # empty vec to be used later
+  
+  cohen_d <- function(d1,d2){
+  m1 <- mean(d1, na.rm = TRUE)
+  m2 <- mean(d2, na.rm = TRUE)
+  s1 <- sd(d1, na.rm = TRUE)
+  s2 <- sd(d2, na.rm = TRUE)
+  spo <- sqrt((s1**2+s2**2)/2)
+  d <- (m1-m2) / spo
+  rpb <- d / sqrt((d**2)+4)
+  ret <- list('rpb'=rpb, 'effectsi' = d)
+  return(ret) }
+  
+  require(pwr)
+  for(i in seq(1:length(differs) ) ) {
+    samp1 <- historical_data
+    xnu = differs[[i]]
+  
+    # this is a better version if you can understand it:
+    samp2 <- samp1 + rnorm(length(samp1), xnu, xnu/10) # add some noise
+  
+    inp <- cohen_d(samp1, samp2)
+    p[i] <- pwr.2p.test(h=inp$effectsi , sig.level=0.05, power=0.8, n=NULL)$n
+  }
+  
+require(ggplot2)
+print(ggplot() + geom_point(aes(x=p, y= differs), size=3, color="blue", shape=1) + geom_line(aes(x=p, y=differs), size=1.2, color="blue") + xlab("Sample size")+ ylab("MDE") + ggtitle("Minimum detectable effect vs. sample size"))
+
+library(knitr)
+mde_tab = data.frame("MDE"=differs, "Sample size"=p)
+kable(mde_tab, digits=2) 
+}
+
+#set some differences for the loop, here, 1,2,5 (etc) are dollar increases
+diffs <- c(1,2,5,7.5,10,15,20,25)
+
+#get histo data
+histo <- dat$monthly.expenses
+
+#plot
+plot_MDE(histo, diffs)
+```
+
+Note that this function will give you the Y-axis in whatever units you gave to the function (in this case, US dollars).
+
+At this point, it is easy to think we are done with calculating the sample sizes. However, so far is only half of the pre-analysis. We would need to validate what statistical power would this sample size brings us.
+
+### 7.2 Use Sample Size to Assess Statistical Power 
+A high statistical power would represents high likelihood for a real world test result to achieve similar to what was being produced from the experiment.
+
+Let's think of an example. Imagine we want to access the effect of an new interest rate on fertilizer adoption. Our control group has the same interest rate as before, whereas, our test group has an interest rate reduced by 3 points. Based on this intervention method, we believe that the customer means we think we will see a 15 to 25% increase in fertilizer adoption with the treatment. 
+
+Now our goal is to use a list of testable percentages as our list of MDE to determine sample sizes so that we are able to use this sample size information to see what is the minimal sample size requirement in order to achieve a 80% statistical power, meaning that there would be 80% chances for a real world test result to be similar to what we were able to produce from an experimental trial.
+
+```{r}
+control <- rnorm(100, 0.5,0.2)
+treat_lower_estimate <- control *1.15
+treat_upper_estimate <- control *1.25
+
+power_lw <- c() # initialise this empty so we can append to it
+power_hi <- c() # initialise this empty so we can append to it
+sample_sizes <- c(10,20,30,40,50,70,90,100,125,150,175,200,250,300,350,400,450,500,550,600,700)
+
+cohen_d <- function(d1,d2){
+  m1 <- mean(d1, na.rm = TRUE)
+  m2 <- mean(d2, na.rm = TRUE)
+  s1 <- sd(d1, na.rm = TRUE)
+  s2 <- sd(d2, na.rm = TRUE)
+  spo <- sqrt((s1**2+s2**2)/2)
+  d <- (m1-m2) / spo
+  rpb <- d / sqrt((d**2)+4)
+  ret <- list('rpb'=rpb, 'effectsi' = d)
+  return(ret) 
+  }
+  
+for(i in sample_sizes){
+  
+  lower_cohen <- cohen_d(control, treat_lower_estimate)
+  a <- pwr.t.test(d = lower_cohen$effectsi , n=i,  sig.level = 0.05, power = NULL)$power
+  power_lw <- c(power_lw, a)
+  
+  upper_cohen <- cohen_d(control, treat_upper_estimate)
+  b <- pwr.t.test(d = upper_cohen$effectsi , n=i,  sig.level = 0.05, power = NULL)$power
+  power_hi <- c(power_hi, b)
+  
+}
+
+marker <- pwr.t.test(d = lower_cohen$effectsi , n=NULL,  sig.level = 0.05, power = 0.8)$n
+marker2 <- pwr.t.test(d = upper_cohen$effectsi , n=NULL,  sig.level = 0.05, power = 0.8)$n
+ggplot() + geom_ribbon(aes(x=sample_sizes, ymin= power_lw, ymax=power_hi), alpha=0.2, colour="blue", fill="blue")  + xlab("Sample size") + ylab("Power") + geom_vline(xintercept = marker, linetype="dotted" ) + geom_hline(yintercept=0.8, linetype="dotted", size=2) + geom_vline(xintercept = marker2 , linetype="dotted") + labs(title="Power curve example", caption="Power curve indicating sample sizes needed for a 0.8 power (dotted lines)") + theme(plot.caption = element_text(hjust = 0.5)) 
+```
+
+
+
+## 8. Measurement
+The final part of the A/B test is the measurement itself. The following are the kinds of tests we are able to perform:
+
+1. T-test: Assumes a normal-like distribution. 
+2. Paired T-test: A T-test (as above), but used for measuring the same subject before and after treatment.
+3. Two-sample T-test: A T-test used for two different groups.
+4. Welch test: An improvement on the T-test, which is more robust to unequal variances (e.g. more robust to having samples where the width of the density plot is different). We can call the Welch test with the argument "var.equal=FALSE" in the t.test() R function. Note that a Welch test is only valid for normally distributed data (like the T-test).
+5. Wilcoxon-test: A good test for non normal data with very few assumptions. We are testing the hypothesis that two datasets have different distributions. 
+
+### 8.1 Best Practices
+1. Even though we calculate the sample size before an RCT, it is important to calculate the power (which is related to sample size) to make sure our study has sufficient power. Remember, low power means we are unlikely to detect an effect from an intervention, and generally makes our results less reliable. We would want to have at least 80% statistical power to confidently conclude the result of a test.
+
+2. We must also plot the distributions of key variables. In an RCT we will often have 2 or more groups (e.g. Control and treatment) to observe. We should therefore plot density plots or boxplots for each key variable at the start of the analysis. 
+
+3. Test our assumptions. We should run a Shapiro test on our data to make sure it is normal before deciding what method to use (e.g. a T-test or a Wilcoxon test).
+
+4. Always report the p-value with means and confidence intervals for normal distributed data OR with medians and first and third quartiles for non-normal data.
+
