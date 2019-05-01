@@ -82,6 +82,7 @@ While there might be logistical or organizational reasons why we can't do the fo
 df = data.frame("OAFID"=seq(1,1000), "yield"=rnorm(1000))
 head(df)
 ```
+
 ```{r}
 # lets now make a function to do the work
 # it needs to be given a dataframe and a list of naming options
