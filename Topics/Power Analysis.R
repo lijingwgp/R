@@ -3,22 +3,8 @@ library(ggplot2)
 library(pwr)
 library(knitr)
 library(lsr)
-setwd("C:/Users/jing.o.li/Desktop/SBC/SBC_19")
-ship_his_m1 = read.csv('genex_his4.csv',header = TRUE, sep = ',')
-
-# establish churn amount and churn binary variables
-# both could be used in AB testing
-colnames(ship_his_m1) <- toupper(names(ship_his_m1))
-ship_his_m1 <- ship_his_m1 %>%
-  filter(P1REVENUE >= 500) %>%
-  mutate(CHURN_AMOUNT = P1REVENUE - P3REVENUE, 
-         CHURN_BINARY = ifelse(CHURN_AMOUNT >= 500, 1, 0))
-ship_his_m1 <- ship_his_m1[,c(213,214)]
-
-#ship_his_m1 = read.csv('True Churn Amount.csv',header = TRUE, sep = ',')
-#ship_his_m1 = ship_his_m1$Churn.Amount
-#ship_his_m1 = data.frame(ship_his_m1)
-#colnames(ship_his_m1) <- 'churn'
+setwd("file path")
+temp = read.csv('file name',header = TRUE, sep = ',')
 
 # find outliers
 find_outliers <- function(data_to_test){
@@ -28,22 +14,16 @@ find_outliers <- function(data_to_test){
   ret = c(cutoff,cutoff2)
   return(ret)
 }
-pos <- which(ship_his_m1$CHURN_AMOUNT %in% find_outliers(ship_his_m1$CHURN_AMOUNT) )
-ship_his_m2 <- data.frame(ship_his_m1[-pos,])
-colnames(ship_his_m2) <- c('CHURN AMOUNT',"CHURN BINARY")
-ggplot(ship_his_m2, aes(x = ship_his_m2$`CHURN AMOUNT`)) + geom_density(alpha=.3) +xlab("CHURN AMOUNT")
-
-# ship_his_m3 <- data.frame(ship_his_m2[ship_his_m2$churn > 0, ])
-# colnames(ship_his_m3) <- 'churn'
-# summary(ship_his_m3)
-# sd(ship_his_m3$churn)
+pos <- which(temp$target %in% find_outliers(temp$target) )
+temp2 <- data.frame(temp[-pos,])
+ggplot(temp2, aes(x = temp2$target)) + geom_density(alpha=.3) +xlab("target")
 
 # RCT_random = function(dataframey, values_to_add){
 #    set.seed(111)
 #    dataframey$values_to_add[sample(1:nrow(dataframey), nrow(dataframey), FALSE)] <- rep(values_to_add)
 #    colnames(dataframey)[which(colnames(dataframey)=="values_to_add")] = "Status"
 #    return(dataframey) }
-# ship_his_m4 <- RCT_random(ship_his_m3, c("Treatment","Control"))
+# temp3 <- RCT_random(temp2, c("Treatment","Control"))
 
 # set up MDE to be used in cohen's d
 diffs <- seq(10,100,10)
@@ -51,7 +31,7 @@ diffs <- seq(10,100,10)
 # prioritize MDE
 p <- c() 
 for(i in seq(1:length(diffs) ) ) {
-  samp1 <- ship_his_m2$`CHURN AMOUNT`
+  samp1 <- temp2$`target`
   xnu = diffs[[i]]
   samp2 <- samp1 - rnorm(length(samp1), xnu, xnu/10)
   #samp2 <- samp1 + rnorm(length(samp1), xnu, xnu/10)
@@ -62,7 +42,7 @@ mde_tab = data.frame("MDE"=diffs, "Sample size"=p)
 kable(mde_tab, digits=2) 
 
 # prioritize power
-control <- ship_his_m2$`CHURN AMOUNT`
+control <- temp2$`target`
 #treat_lower_estimate <- control *0.95
 #treat_upper_estimate <- control *0.9
 treat_upper_estimate <- control *1.05
