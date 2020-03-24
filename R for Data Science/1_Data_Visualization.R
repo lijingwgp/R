@@ -93,8 +93,7 @@ ggplot(data = mpg) +
 ggplot(data = mpg) +
   geom_smooth(
     mapping = aes(x = displ, y = hwy, color = drv),
-    show.legend = TRUE
-  )
+    show.legend = TRUE)
 
 # To display multiple geoms in the same plot, add multiple geom functions to ggplot():
 
