@@ -91,9 +91,7 @@ ggplot(data = mpg) +
   geom_smooth(mapping = aes(x = displ, y = hwy, group = drv))
 
 ggplot(data = mpg) +
-  geom_smooth(
-    mapping = aes(x = displ, y = hwy, color = drv),
-    show.legend = TRUE)
+  geom_smooth(mapping = aes(x = displ, y = hwy, color = drv), how.legend = TRUE)
 
 # To display multiple geoms in the same plot, add multiple geom functions to ggplot():
 
@@ -156,8 +154,7 @@ demo <- tribble(
   "Good",       4906,
   "Very Good",  12082,
   "Premium",    13791,
-  "Ideal",      21551
-)
+  "Ideal",      21551)
 
 ggplot(data = demo) +
   geom_bar(mapping = aes(x = cut, y = freq), stat = "identity")
@@ -175,8 +172,7 @@ ggplot(data = diamonds) +
     mapping = aes(x = cut, y = depth),
     fun.ymin = min,
     fun.ymax = max,
-    fun.y = median
-  )
+    fun.y = median)
 
 
 
@@ -261,8 +257,7 @@ bar <- ggplot(data = diamonds) +
   geom_bar(
     mapping = aes(x = cut, fill = cut), 
     show.legend = FALSE,
-    width = 1
-  ) + 
+    width = 1) + 
   theme(aspect.ratio = 1) +
   labs(x = NULL, y = NULL)
 
