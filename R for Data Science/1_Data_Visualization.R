@@ -1,6 +1,6 @@
-###################
-### First steps ###
-###################
+####################
+### Introduction ###
+####################
 
 # the dataset we will be using is call mpg enbedded in the ggplot2 package
 
