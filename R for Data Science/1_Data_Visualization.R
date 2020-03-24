@@ -50,9 +50,9 @@ ggplot(data = mpg) +
 
 
 
-##########################
-### Aesthetic Mappings ###
-##########################
+##############
+### Facets ###
+##############
 
 # Another way, particularly useful for categorical variables, is to split your plot into facets, 
 # subplots that each display one subset of the data.
